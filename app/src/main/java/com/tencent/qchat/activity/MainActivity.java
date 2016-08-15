@@ -38,9 +38,7 @@ public class MainActivity extends BaseActivity{
     }
 
     @Override
-    public void onWillLoadView() {
-
-    }
+    public void onWillLoadView() {    }
 
     @Override
     public void onDidLoadView() {
