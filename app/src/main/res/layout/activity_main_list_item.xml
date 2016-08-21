@@ -77,14 +77,18 @@
         android:textColor="#333"
         android:maxLength="100"
         android:paddingLeft="20dp"
-        android:paddingRight="20dp"/>
+        android:paddingRight="20dp"
+        android:paddingBottom="20dp"
+        />
 
     <LinearLayout
+        android:id="@+id/a_count_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp">
+        android:layout_marginTop="-10dp"
+        android:layout_marginBottom="10dp">
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"

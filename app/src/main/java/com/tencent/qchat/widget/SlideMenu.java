@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
@@ -129,17 +131,20 @@ public class SlideMenu extends RelativeLayout {
     }
 
     float mLastX = 0, mLastY = 0;
+    float mOriginX = 0, mOriginY = 0;
     float mRatio = 4;
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                mLastX = ev.getX();
-                mLastY = ev.getY();
+                mOriginX = mLastX = ev.getX();
+                mOriginY = mLastY = ev.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (Math.abs(ev.getX() - mLastX) > Math.abs(ev.getY() - mLastY) * mRatio) {
+                if (mIsOpened && ev.getX() > mMenuWidth) {
+                    return true;
+                } else if (Math.abs(ev.getX() - mLastX) > Math.abs(ev.getY() - mLastY) * mRatio) {
                     return true;
                 }
                 break;
@@ -178,9 +183,14 @@ public class SlideMenu extends RelativeLayout {
                     if (scroll > mMenuWidth / 2.5) {
                         smoothScrollTo(mMenuWidth);
                         mIsOpened = false;
-                    }else  {
+                    } else if (scroll < mMenuWidth / 2.5 && scroll != 0) {
                         smoothScrollTo(0);
                         mIsOpened = true;
+                    } else if (ev.getX() > mMenuWidth && (Math.pow(mOriginX - ev.getX(), 2) + Math.pow(mOriginY - ev.getY(), 2)) < 2) {
+                        close();
+                        return true;
+                    } else {
+                        return super.onTouchEvent(ev);
                     }
                 }
                 return true;
@@ -188,7 +198,6 @@ public class SlideMenu extends RelativeLayout {
         }
         return super.onTouchEvent(ev);
     }
-
 
     public void smoothScrollTo(int pos) {
         smoothScrollBy(pos - getScrollX());
@@ -245,4 +254,5 @@ public class SlideMenu extends RelativeLayout {
             mVelocityTracker.recycle();
         }
     }
+
 }

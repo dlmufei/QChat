@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -93,7 +94,7 @@ public class MainActivity extends BaseActivity {
     private void initContentView() {
         mAdapter = new MainAdapter();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.addItemDecoration(mAdapter.new MainDivider(ScreenUtil.dp2px(this,10)));
+        mRecyclerView.addItemDecoration(mAdapter.new MainDivider(ScreenUtil.dp2px(this, 10)));
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -129,30 +130,63 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    public class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainHolder> {
+    public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+        private static final int TYPE_BANNER = 0X01;
+        private static final int TYPE_ITEM = 0x02;
 
         @Override
-        public MainHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new MainHolder(LayoutInflater.from(MainActivity.this).inflate(R.layout.activity_main_list_item, parent, false));
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            switch (viewType) {
+                case TYPE_BANNER:
+                    return new BannerHolder(LayoutInflater.from(MainActivity.this).inflate(R.layout.activity_main_list_banner, parent, false));
+                case TYPE_ITEM:
+                    return new MainHolder(LayoutInflater.from(MainActivity.this).inflate(R.layout.activity_main_list_item, parent, false));
+            }
+            throw new NullPointerException("error return null in function onCreateViewHolder");
         }
 
         @Override
-        public void onBindViewHolder(MainHolder holder, int position) {
-            Row row = mQRowList.get(position);
-            holder.qContent.setText(row.getQuestionContent().replaceAll("(\r\n)+","\n"));
-            holder.aNick.setText(row.getAnswerLead().getUserNickname());
-            holder.aTitle.setText(" · "+row.getAnswerLead().getUserTitle());
-            holder.aTime.setText(TimeUtil.msecToString(row.getQuestionTime()));
-            holder.aContent.setText(row.getAnswerLead().getAnswerContent().replaceAll("(\r\n)+","\n"));
-            holder.aCount.setText("还有"+(row.getAnswerCount()-1)+"个回答");
-            holder.aAvatar.setImageURI(Uri.parse(row.getAnswerLead().getUserAvatar()));
-            holder.qHot.setVisibility(View.VISIBLE);
-            if (TimeUtil.isNewPost(row.getQuestionTime())) {
-                holder.qHot.setImageResource(R.mipmap.label_new);
-            } else if (row.getQuestionIsHot()) {
-                holder.qHot.setImageResource(R.mipmap.label_hot);
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            switch (getItemViewType(position)) {
+                case TYPE_BANNER:
+                    BannerHolder bannerHolder = (BannerHolder) holder;
+                    bannerHolder.bannerView.setImageURI(Uri.parse("https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png"));
+                    break;
+                case TYPE_ITEM:
+                    Row row = mQRowList.get(position - 1);
+                    MainHolder mainHolder = (MainHolder) holder;
+                    mainHolder.qContent.setText(row.getQuestionContent().replaceAll("(\r\n)+", "\n"));
+                    mainHolder.aNick.setText(row.getAnswerLead().getUserNickname());
+                    mainHolder.aTitle.setText(" · " + row.getAnswerLead().getUserTitle());
+                    mainHolder.aTime.setText(TimeUtil.msecToString(row.getQuestionTime()));
+                    mainHolder.aContent.setText(row.getAnswerLead().getAnswerContent().replaceAll("(\r\n)+", "\n"));
+                    if (row.getAnswerCount() <= 1) {
+                        mainHolder.qCountLayout.setVisibility(View.GONE);
+                    } else {
+                        mainHolder.qCountLayout.setVisibility(View.VISIBLE);
+                        mainHolder.aCount.setText("还有" + (row.getAnswerCount() - 1) + "个回答");
+                    }
+
+                    mainHolder.aAvatar.setImageURI(Uri.parse(row.getAnswerLead().getUserAvatar()));
+                    mainHolder.qHot.setVisibility(View.VISIBLE);
+                    if (TimeUtil.isNewPost(row.getQuestionTime())) {
+                        mainHolder.qHot.setImageResource(R.mipmap.label_new);
+                    } else if (row.getQuestionIsHot()) {
+                        mainHolder.qHot.setImageResource(R.mipmap.label_hot);
+                    } else {
+                        mainHolder.qHot.setVisibility(View.GONE);
+                    }
+                    break;
+            }
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (position == 0) {
+                return TYPE_BANNER;
             } else {
-                holder.qHot.setVisibility(View.GONE);
+                return TYPE_ITEM;
             }
         }
 
@@ -161,7 +195,7 @@ public class MainActivity extends BaseActivity {
             if (mQRowList == null) {
                 return 0;
             }
-            return mQRowList.size();
+            return mQRowList.size() + 1;
         }
 
         public class MainHolder extends RecyclerView.ViewHolder {
@@ -182,6 +216,8 @@ public class MainActivity extends BaseActivity {
             ImageView qHot;
             @BindView(R.id.a_avatar)
             SimpleDraweeView aAvatar;
+            @BindView(R.id.a_count_layout)
+            LinearLayout qCountLayout;
 
             public MainHolder(View itemView) {
                 super(itemView);
@@ -189,20 +225,33 @@ public class MainActivity extends BaseActivity {
                 ButterKnife.bind(this, itemView);
             }
         }
-        public class MainDivider extends RecyclerView.ItemDecoration{
+
+        public class BannerHolder extends RecyclerView.ViewHolder {
+
+            public SimpleDraweeView bannerView;
+
+            public BannerHolder(View itemView) {
+                super(itemView);
+                bannerView = (SimpleDraweeView) itemView;
+            }
+        }
+
+        public class MainDivider extends RecyclerView.ItemDecoration {
 
             private int mOffset;
-            public MainDivider(int offset){
-                mOffset=offset;
+
+            public MainDivider(int offset) {
+                mOffset = offset;
             }
 
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 super.getItemOffsets(outRect, view, parent, state);
-                if(parent.getChildAdapterPosition(view)==mAdapter.getItemCount()-1){
-                    mOffset=0;
-                }else{
-                    outRect.bottom=mOffset;
+                int pos = parent.getChildLayoutPosition(view);
+                if (pos == 0 || pos == mAdapter.getItemCount()-1) {
+                    outRect.bottom=0;
+                } else {
+                    outRect.bottom = mOffset;
                 }
             }
         }
