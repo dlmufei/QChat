@@ -1,3 +1,8 @@
 <resources>
+
+
     <string name="app_name">有聊</string>
+
+    <!--网络错误-->
+    <string name="error_network">网络没聊好,请重聊</string>
 </resources>

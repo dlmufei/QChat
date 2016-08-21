@@ -11,10 +11,10 @@
     <!--Toolbar的高度-->
     <dimen name="toolbar_height">40dp</dimen>
     <!--主界面顶部的左右View的大小-->
-    <dimen name="toolbar_main_icon_size">20dp</dimen>
+    <dimen name="toolbar_main_icon_size">40dp</dimen>
     <!--主界面顶部的中间的图片View的大小-->
     <dimen name="toolbar_main_iv_height">80dp</dimen>
-    <dimen name="toolbar_main_iv_width">40dp</dimen>
+    <dimen name="toolbar_main_iv_width">50dp</dimen>
     <!--菜单栏举例顶部的举例,一般==状态栏高度+Toolbar高度-->
     <dimen name="menu_top_margin">84dp</dimen>
 </resources>

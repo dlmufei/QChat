@@ -1,71 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.tencent.qchat.widget.SlideMenu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:slide="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/slide_menu"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    slide:slide_right_padding="180dp">
 
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawer"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <RelativeLayout
-            android:layout_gravity="start"
-            android:background="@android:color/darker_gray"
-            android:layout_width="200dp"
-            android:padding="20dp"
-            android:layout_height="match_parent">
-            <ListView
-                android:id="@+id/menu_list"
-                android:layout_marginTop="@dimen/menu_top_margin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:textSize="@dimen/system_main_text_normal"
-                android:text="有聊,\n让我们聊出精彩吧"/>
-        </RelativeLayout>
-        <LinearLayout
+        android:layout_height="match_parent"
+        android:background="#e6e6e6">
+
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/toolbar_height"
-                android:padding="2dp"
-                android:background="@color/colorPrimary">
-                <ImageView
-                    android:id="@+id/logo"
-                    android:layout_width="@dimen/toolbar_main_icon_size"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:layout_height="@dimen/toolbar_main_icon_size"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/toolbar_main_logo"
-                    android:layout_margin="10dp"/>
-                <ImageView
-                    android:layout_width="@dimen/toolbar_main_iv_width"
-                    android:layout_height="@dimen/toolbar_main_iv_height"
-                    android:background="@mipmap/toolbar_title"
-                    android:layout_centerInParent="true"
-                    android:layout_margin="2dp"/>
-                <ImageView
-                    android:id="@+id/msg"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:layout_width="@dimen/toolbar_main_icon_size"
-                    android:layout_height="@dimen/toolbar_main_icon_size"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:background="@drawable/toolbar_main_msg"
-                    android:layout_margin="10dp"/>
-            </RelativeLayout>
-            <FrameLayout
-                android:id="@+id/main_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </LinearLayout>
-    </android.support.v4.widget.DrawerLayout>
-</android.support.constraint.ConstraintLayout>
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:paddingBottom="40dp"
+            android:paddingLeft="20dp"
+            android:text="有聊,\n让我们聊出精彩吧"
+            android:textColor="#c3c3c3"
+            android:textSize="@dimen/system_main_text_normal" />
+
+        <ListView
+            android:id="@+id/menu_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="@dimen/toolbar_height" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:padding="2dp">
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="@dimen/toolbar_main_icon_size"
+                android:layout_height="@dimen/toolbar_main_icon_size"
+                android:layout_centerVertical="true"
+                android:padding="10dp"
+                android:src="@drawable/toolbar_main_logo"
+                android:scaleType="fitXY"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+
+            <ImageView
+                android:layout_width="@dimen/toolbar_main_iv_width"
+                android:layout_height="@dimen/toolbar_main_iv_height"
+                android:layout_centerInParent="true"
+                android:layout_margin="2dp"
+                android:background="@mipmap/toolbar_title" />
+
+            <ImageView
+                android:id="@+id/msg"
+                android:layout_width="@dimen/toolbar_main_icon_size"
+                android:layout_height="@dimen/toolbar_main_icon_size"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:padding="10dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/toolbar_main_msg"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list"
+            android:background="#e6e6e6"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+</com.tencent.qchat.widget.SlideMenu>
