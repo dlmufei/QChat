@@ -151,7 +151,7 @@ public class MainActivity extends BaseActivity {
             switch (getItemViewType(position)) {
                 case TYPE_BANNER:
                     BannerHolder bannerHolder = (BannerHolder) holder;
-                    bannerHolder.bannerView.setImageURI(Uri.parse("https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png"));
+                    bannerHolder.bannerView.setImageURI(Uri.parse("https://interesting.geeyan.com//uploads//images//c5//c1//96d012057c1492f5215ed79e5f94.jpg"));
                     break;
                 case TYPE_ITEM:
                     Row row = mQRowList.get(position - 1);

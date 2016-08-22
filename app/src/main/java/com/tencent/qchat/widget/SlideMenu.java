@@ -81,7 +81,6 @@ public class SlideMenu extends RelativeLayout {
     }
 
     public void init(AttributeSet attrs) {
-        setHorizontalScrollBarEnabled(false);
         mScreenWidth = ScreenUtil.getScreenWidth(mContext);
         TypedArray ta = mContext.obtainStyledAttributes(attrs, R.styleable.SlideMenu);
         mRightPadding = ta.getDimensionPixelSize(R.styleable.SlideMenu_slide_right_padding,
@@ -130,21 +129,22 @@ public class SlideMenu extends RelativeLayout {
         }
     }
 
-    float mLastX = 0, mLastY = 0;
-    float mOriginX = 0, mOriginY = 0;
-    float mRatio = 4;
+    float mLastX = 0, mLastY = 0; //用来记录上一次的触屏位置
+    float mOriginX = 0, mOriginY = 0;  //为了判断是点击事件还是滑动事件
+    float mRatio = 4;   //  当 x>mRatio*y 的时候才认为用户想滑动菜单
+
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mOriginX = mLastX = ev.getX();
-                mOriginY = mLastY = ev.getY();
+                mOriginY = mLastY = ev.getY();      //  记录Down的位置
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (mIsOpened && ev.getX() > mMenuWidth) {
+                if (mIsOpened && ev.getX() > mMenuWidth) {  // 当菜单处于打开状态时,如果用户点击菜单以外的区域就进行拦截,进而在onTouchEvent中执行关闭菜单的效果
                     return true;
-                } else if (Math.abs(ev.getX() - mLastX) > Math.abs(ev.getY() - mLastY) * mRatio) {
+                } else if (Math.abs(ev.getX() - mLastX) > Math.abs(ev.getY() - mLastY) * mRatio) {  //  为了解决滑动冲突,首先在这里判断是否符合滑动菜单的要求,然后决定是否拦截该事件
                     return true;
                 }
                 break;
@@ -156,15 +156,15 @@ public class SlideMenu extends RelativeLayout {
     public boolean onTouchEvent(MotionEvent ev) {
         mVelocityTracker.addMovement(ev);
         switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_DOWN:  //  记录Down的位置
                 mLastX = ev.getX();
                 mLastY = ev.getY();
                 return true;
             case MotionEvent.ACTION_MOVE:
-                if (Math.abs(ev.getX() - mLastX) > Math.abs(ev.getY() - mLastY) * mRatio) {
+                if (Math.abs(ev.getX() - mLastX) > Math.abs(ev.getY() - mLastY) * mRatio) {  //  根据move滑动菜单
                     scrollBy((int) (mLastX - ev.getX()));
                 }
-                mLastX = ev.getX();
+                mLastX = ev.getX();  //  记录上一次触摸时间的位置
                 mLastY = ev.getY();
                 return true;
             case MotionEvent.ACTION_UP:
@@ -172,21 +172,22 @@ public class SlideMenu extends RelativeLayout {
                 mVelocityTracker.computeCurrentVelocity(100);
                 float v_x = mVelocityTracker.getXVelocity();
                 float v_y = mVelocityTracker.getYVelocity();
-                if (v_x > 20 && v_x > v_y * mRatio) {
+                if (v_x > 20 && v_x > v_y * mRatio) {   //  当速度大于20时并且符合滑动要求时进行动态关闭或打开菜单操作
                     smoothScrollTo(0);
                     mIsOpened = true;
-                } else if (v_x < -20 && v_x < v_y * mRatio) {
+                } else if (v_x < -20 && v_x < v_y * mRatio) {  //  同上
                     smoothScrollTo(mMenuWidth);
                     mIsOpened = false;
                 } else {
                     int scroll = getScrollX();
-                    if (scroll > mMenuWidth / 2.5) {
+                    if (scroll > mMenuWidth / 2.5) {    // 菜单划出距离超过mMenuWidth的2/5时自动关闭菜单
                         smoothScrollTo(mMenuWidth);
                         mIsOpened = false;
-                    } else if (scroll < mMenuWidth / 2.5 && scroll != 0) {
+                    } else if (scroll < mMenuWidth / 2.5 && scroll != 0) {  // 菜单划出距离小于mMenuWidth的2/5时,并且当前菜单没有打开时,自动打开菜单
                         smoothScrollTo(0);
                         mIsOpened = true;
-                    } else if (ev.getX() > mMenuWidth && (Math.pow(mOriginX - ev.getX(), 2) + Math.pow(mOriginY - ev.getY(), 2)) < 2) {
+                    } else if (mIsOpened && ev.getX() > mMenuWidth && (Math.pow(mOriginX - ev.getX(), 2) + Math.pow(mOriginY - ev.getY(), 2)) < 2) {
+                        //  菜单处于打开状态时,如果发生菜单外区域的点击事件,就关闭菜单,这个是仿照手机qq的效果
                         close();
                         return true;
                     } else {
