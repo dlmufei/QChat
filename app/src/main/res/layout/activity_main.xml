@@ -73,12 +73,30 @@
                 android:focusableInTouchMode="true" />
         </RelativeLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list"
-            android:background="#e6e6e6"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
+            android:layout_height="match_parent">
+            <com.tencent.qchat.widget.RefreshLayout
+                android:id="@+id/refresh_layout"
+                android:background="@android:color/background_dark"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/list"
+                    android:background="#e6e6e6"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </com.tencent.qchat.widget.RefreshLayout>
+            <ImageButton
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="20dp"
+                android:background="@null"
+                android:scaleType="fitXY"
+                android:src="@drawable/main_wo_liao"/>
+        </RelativeLayout>
     </LinearLayout>
 
 </com.tencent.qchat.widget.SlideMenu>

@@ -1,5 +1,5 @@
 
-package com.tencent.qchat.module;
+package com.tencent.qchat.model;
 
 import java.util.ArrayList;
 import java.util.List;

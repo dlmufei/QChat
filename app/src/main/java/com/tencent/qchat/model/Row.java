@@ -1,5 +1,5 @@
 
-package com.tencent.qchat.module;
+package com.tencent.qchat.model;
 
 public class Row {
 

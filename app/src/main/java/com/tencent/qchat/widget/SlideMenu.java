@@ -172,10 +172,10 @@ public class SlideMenu extends RelativeLayout {
                 mVelocityTracker.computeCurrentVelocity(100);
                 float v_x = mVelocityTracker.getXVelocity();
                 float v_y = mVelocityTracker.getYVelocity();
-                if (v_x > 20 && v_x > v_y * mRatio) {   //  当速度大于20时并且符合滑动要求时进行动态关闭或打开菜单操作
+                if (v_x > 30 && v_x > v_y * mRatio) {   //  当速度大于20时并且符合滑动要求时进行动态关闭或打开菜单操作
                     smoothScrollTo(0);
                     mIsOpened = true;
-                } else if (v_x < -20 && v_x < v_y * mRatio) {  //  同上
+                } else if (v_x < -30 && v_x < v_y * mRatio) {  //  同上
                     smoothScrollTo(mMenuWidth);
                     mIsOpened = false;
                 } else {

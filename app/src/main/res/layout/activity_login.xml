@@ -1,34 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <View
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        android:onClick="wxLogin"
-        style="@style/login_tv_bg"
-        android:text="微信登录" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2" />
 
-    <TextView
-        android:layout_marginTop="20dp"
-        android:onClick="qqLogin"
-        style="@style/login_tv_bg"
-        android:text="QQ登录" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
-        android:text="让我们和世界好好聊一聊"
-        android:textSize="@dimen/system_main_text_small"/>
+        <TextView
+            style="@style/login_tv_bg"
+            android:onClick="wxLogin"
+            android:text="微信登录" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-</LinearLayout>
+        <TextView
+            style="@style/login_tv_bg"
+            android:layout_marginTop="20dp"
+            android:onClick="qqLogin"
+            android:text="QQ登录" />
+
+        <TextView
+            style="@style/login_tv_bg"
+            android:layout_marginTop="20dp"
+            android:onClick="visitor"
+            android:text="随便逛逛" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="让我们和世界好好聊一聊"
+            android:textSize="@dimen/system_main_text_small" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/loading"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:src="@mipmap/login_loading" />
+
+</RelativeLayout>

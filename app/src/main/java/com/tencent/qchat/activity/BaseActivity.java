@@ -1,23 +1,29 @@
 package com.tencent.qchat.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.tencent.qchat.R;
 import com.tencent.qchat.utils.LoadViewInterface;
+import com.tencent.qchat.utils.ScreenUtil;
+import com.tencent.qchat.widget.SlideMenu;
 
 import butterknife.ButterKnife;
 
 /**
  * Created by hiwang on 16/8/11.
- * <p>
+ * <p/>
  * 上层Activity,所有的Activity都要继承自它
  */
 
@@ -49,20 +55,40 @@ public abstract class BaseActivity extends AppCompatActivity implements LoadView
         if (layout == 0)
             throw new NullPointerException("you may forget to set the layout resource id ..." + getLocalClassName());
         onWillLoadView();
-        setContentView(layout);
+        ViewGroup contentView = (ViewGroup) LayoutInflater.from(this).inflate(layout, null);
+        //如果不是SlideMenu,就给顶部添加一个占位view
+        if (!(contentView instanceof SlideMenu)) {
+            View blank = new View(this);
+            blank.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            contentView.addView(blank, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtil.getStatusBarHeight(this)));
+        }
+        setContentView(contentView);
         ButterKnife.bind(this);
         onDidLoadView();
     }
+
+    protected void openActivity(Class clz) {
+        startActivity(new Intent(this, clz));
+    }
+
+    protected void openWebActivity(String url,String title) {
+        Intent intent = new Intent(this, WebActivity.class);
+        intent.putExtra(WebActivity.URL, url)
+                .putExtra(WebActivity.TITLE,title);
+        startActivity(intent);
+    }
+
     /**
      * 实现经典的Activity打开动画
      */
-    protected void playOpenAnimation(){
-        overridePendingTransition(R.anim.slide_in_right,R.anim.slide_clam);
+    protected void playOpenAnimation() {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_clam);
     }
+
     /**
      * 实现经典的Activity退出动画
      */
-    protected void playExitAnimation(){
-        overridePendingTransition(R.anim.slide_clam,R.anim.slide_out_right);
+    protected void playExitAnimation() {
+        overridePendingTransition(R.anim.slide_clam, R.anim.slide_out_right);
     }
 }

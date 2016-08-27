@@ -13,15 +13,18 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.debug.hv.ViewServer;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.tencent.qchat.R;
-import com.tencent.qchat.module.QList;
-import com.tencent.qchat.module.Row;
+import com.tencent.qchat.http.RetrofitHelper;
+import com.tencent.qchat.model.Data;
+import com.tencent.qchat.model.Row;
 import com.tencent.qchat.utils.BaseAdapter;
-import com.tencent.qchat.utils.RetrofitHelper;
 import com.tencent.qchat.utils.ScreenUtil;
 import com.tencent.qchat.utils.TimeUtil;
+import com.tencent.qchat.utils.UserUtil;
 import com.tencent.qchat.utils.ViewHolder;
+import com.tencent.qchat.widget.RefreshLayout;
 import com.tencent.qchat.widget.SlideMenu;
 
 import java.util.List;
@@ -29,17 +32,17 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import rx.Subscriber;
 
 /**
  * 主界面
  */
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements RefreshLayout.OnRefreshListener {
 
-    private int[] mMenuIcon = new int[]{R.drawable.menu_qa, R.drawable.menu_exit};
-    private String[] mMenuText = new String[]{"我的提问", "退出登录"};
+    protected int[] mMenuIcon = new int[]{R.drawable.menu_qa, R.drawable.menu_exit};
+    protected String[] mMenuTextComm = new String[]{"我的提问", "退出登录"};
+    protected String[] mMenuTextStaff = new String[]{"我的回答", "退出登录"};
+    protected String[] mMenuTextVisitor = new String[]{"立即登录"};
 
     @BindView(R.id.menu_list)
     ListView mMenuList;
@@ -48,11 +51,12 @@ public class MainActivity extends BaseActivity {
 
     @BindView(R.id.slide_menu)
     SlideMenu mSlideMenu;
+    @BindView(R.id.refresh_layout)
+    RefreshLayout mRefreshLayout;
 
     MainAdapter mAdapter;
 
     List<Row> mQRowList;
-    Call<QList> mCaller;
 
 
     @Override
@@ -62,36 +66,21 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onWillLoadView() {
-        mCaller = RetrofitHelper.getEndPointInterface().getQList();
-        mCaller.enqueue(new Callback<QList>() {
-
-            @Override
-            public void onResponse(Call<QList> call, Response<QList> response) {
-                if (mQRowList == null) {
-                    mQRowList = response.body().getData().getRows();
-                } else {
-                    mQRowList.addAll(response.body().getData().getRows());
-                }
-                mAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(Call<QList> call, Throwable t) {
-                showToast(getResources().getString(R.string.error_network));
-            }
-        });
     }
 
     @Override
     public void onDidLoadView() {
+        ViewServer.get(this).addWindow(this);
         initMenu();
         initContentView();
+        refreshListDataFromNet();
     }
 
     /**
      * 初始化Toolbar和主界面的内容
      */
     private void initContentView() {
+        mRefreshLayout.setOnRefreshListener(this);
         mAdapter = new MainAdapter();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration(mAdapter.new MainDivider(ScreenUtil.dp2px(this, 10)));
@@ -106,14 +95,25 @@ public class MainActivity extends BaseActivity {
         mMenuList.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
-                return mMenuIcon.length;
+                return UserUtil.isLogin(superCtx) ? 2 : 1;
             }
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 ViewHolder holder = ViewHolder.get(superCtx, convertView, R.layout.menu_list_item, position, parent);
-                holder.setImageResource(R.id.icon, mMenuIcon[position])
-                        .setText(R.id.text, mMenuText[position]);
+                holder.setImageResource(R.id.icon, mMenuIcon[position]);
+                if(UserUtil.isLogin(superCtx)){
+                    if(UserUtil.getIsStaff(superCtx)){
+                        holder.setImageResource(R.id.icon, mMenuIcon[position]);
+                        holder.setText(R.id.text,mMenuTextStaff[position]);
+                    }else{
+                        holder.setImageResource(R.id.icon, mMenuIcon[position]);
+                        holder.setText(R.id.text,mMenuTextComm[position]);
+                    }
+                }else{
+                    holder.setImageResource(R.id.icon, mMenuIcon[position]);
+                    holder.setText(R.id.text,mMenuTextVisitor[position]);
+                }
                 return holder.getConvertView();
             }
         });
@@ -122,12 +122,59 @@ public class MainActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
+                        if(UserUtil.isLogin(superCtx)){
+                            if(UserUtil.getIsStaff(superCtx)){
+                                showToast("我的回答");
+                            }else{
+                                showToast("我的提问");
+                            }
+                        }else{
+                            openActivity(LoginActivity.class);
+                        }
                         break;
                     case 1:
+                        UserUtil.clear(superCtx);
+                        mSlideMenu.close();
+                        ((BaseAdapter)mMenuList.getAdapter()).notifyDataSetChanged();
+                        showToast("退出成功");
+                        openActivity(LoginActivity.class);
                         break;
                 }
+                mSlideMenu.close();
             }
         });
+    }
+
+    protected void refreshListDataFromNet() {
+        RetrofitHelper.getInstance().getQList(new Subscriber<Data>() {
+            @Override
+            public void onCompleted() {
+                showToast("更新成功");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                showToast(e.getMessage());
+                mRefreshLayout.refreshDownComplete();
+            }
+
+            @Override
+            public void onNext(Data data) {
+                mQRowList = data.getRows();
+                mAdapter.notifyDataSetChanged();
+                mRefreshLayout.refreshDownComplete();
+            }
+        });
+    }
+
+    @Override
+    public void onRefreshDown() {
+        refreshListDataFromNet();
+    }
+
+    @Override
+    public void onRefreshUp() {
+
     }
 
     public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -147,11 +194,17 @@ public class MainActivity extends BaseActivity {
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
             switch (getItemViewType(position)) {
                 case TYPE_BANNER:
                     BannerHolder bannerHolder = (BannerHolder) holder;
                     bannerHolder.bannerView.setImageURI(Uri.parse("https://interesting.geeyan.com//uploads//images//c5//c1//96d012057c1492f5215ed79e5f94.jpg"));
+                    bannerHolder.bannerView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+//                            openWebActivity();
+                        }
+                    });
                     break;
                 case TYPE_ITEM:
                     Row row = mQRowList.get(position - 1);
@@ -177,6 +230,12 @@ public class MainActivity extends BaseActivity {
                     } else {
                         mainHolder.qHot.setVisibility(View.GONE);
                     }
+                    mainHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            openWebActivity(mQRowList.get(position-1).getQuestionUrl(),"问题详情");
+                        }
+                    });
                     break;
             }
         }
@@ -248,8 +307,8 @@ public class MainActivity extends BaseActivity {
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 super.getItemOffsets(outRect, view, parent, state);
                 int pos = parent.getChildLayoutPosition(view);
-                if (pos == 0 || pos == mAdapter.getItemCount()-1) {
-                    outRect.bottom=0;
+                if (pos == 0 || pos == mAdapter.getItemCount() - 1) {
+                    outRect.bottom = 0;
                 } else {
                     outRect.bottom = mOffset;
                 }
@@ -262,7 +321,7 @@ public class MainActivity extends BaseActivity {
         if (mSlideMenu.isOpened()) {
             mSlideMenu.close();
         } else {
-            moveTaskToBack(false);
+//            moveTaskToBack(false);
             super.onBackPressed();
         }
     }
@@ -272,5 +331,16 @@ public class MainActivity extends BaseActivity {
         mSlideMenu.toggle();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ViewServer.get(this).removeWindow(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ViewServer.get(this).setFocusedWindow(this);
+    }
 
 }
