@@ -7,7 +7,7 @@ import java.util.List;
 public class Data {
 
     private Integer total;
-    private List<Row> rows = new ArrayList<Row>();
+    private List<Row> rows = new ArrayList<>();
 
     /**
      * @return The total

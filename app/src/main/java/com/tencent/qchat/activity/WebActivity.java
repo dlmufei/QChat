@@ -40,4 +40,10 @@ public class WebActivity extends BaseActivity {
         mTitleView.setText(mTitle);
         mWebView.loadUrl(mUrl);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_clam,R.anim.slide_out_right);
+    }
 }

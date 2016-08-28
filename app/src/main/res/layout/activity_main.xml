@@ -45,12 +45,12 @@
                 android:layout_width="@dimen/toolbar_main_icon_size"
                 android:layout_height="@dimen/toolbar_main_icon_size"
                 android:layout_centerVertical="true"
-                android:padding="10dp"
-                android:src="@drawable/toolbar_main_logo"
-                android:scaleType="fitXY"
                 android:clickable="true"
                 android:focusable="true"
-                android:focusableInTouchMode="true" />
+                android:focusableInTouchMode="true"
+                android:padding="10dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/toolbar_main_logo" />
 
             <ImageView
                 android:layout_width="@dimen/toolbar_main_iv_width"
@@ -65,37 +65,53 @@
                 android:layout_height="@dimen/toolbar_main_icon_size"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:padding="10dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/toolbar_main_msg"
                 android:clickable="true"
                 android:focusable="true"
-                android:focusableInTouchMode="true" />
+                android:focusableInTouchMode="true"
+                android:padding="10dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/toolbar_main_msg" />
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <com.tencent.qchat.widget.RefreshLayout
-                android:id="@+id/refresh_layout"
-                android:background="@android:color/background_dark"
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/list"
-                    android:background="#e6e6e6"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.tencent.qchat.widget.TopHintView
+                    android:id="@+id/top_hint"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-            </com.tencent.qchat.widget.RefreshLayout>
+                    android:layout_height="20dp"
+                    android:background="#f6964a" />
+
+                <com.tencent.qchat.widget.RefreshLayout
+                    android:id="@+id/refresh_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/background_dark">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/list"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#e6e6e6" />
+                </com.tencent.qchat.widget.RefreshLayout>
+            </LinearLayout>
+
             <ImageButton
+                android:id="@+id/new_ques_btn"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
                 android:layout_marginBottom="20dp"
                 android:background="@null"
                 android:scaleType="fitXY"
-                android:src="@drawable/main_wo_liao"/>
+                android:src="@drawable/main_wo_liao" />
         </RelativeLayout>
     </LinearLayout>
 

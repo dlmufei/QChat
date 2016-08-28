@@ -8,12 +8,22 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
     <style name="SplashActivityStyle" parent="AppTheme">
-        <item name="android:windowBackground">@color/colorAccent</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <!--左侧菜单——自定义属性-->
     <declare-styleable name="SlideMenu">
         <attr name="slide_right_padding" format="dimension|integer" />
+    </declare-styleable>
+
+    <!--TopHintView——自定义属性-->
+    <declare-styleable name="TopHintView">
+        <attr name="text_size" format="dimension"/>
+        <attr name="text_color" format="color"/>
     </declare-styleable>
 
     <!--左侧菜单——字体样式-->

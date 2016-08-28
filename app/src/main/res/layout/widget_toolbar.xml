@@ -23,12 +23,13 @@
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_centerVertical="true"-->
         <!--android:layout_alignParentRight="true"/>-->
-    <ImageView
-        android:id="@+id/more"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+    <TextView
+        android:id="@+id/more_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/system_main_text_normal"
         android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:visibility="gone"/>
+        android:textColor="@android:color/white"
+        android:layout_alignParentRight="true"/>
 
 </RelativeLayout>

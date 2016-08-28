@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -26,6 +27,7 @@ import com.tencent.qchat.utils.UserUtil;
 import com.tencent.qchat.utils.ViewHolder;
 import com.tencent.qchat.widget.RefreshLayout;
 import com.tencent.qchat.widget.SlideMenu;
+import com.tencent.qchat.widget.TopHintView;
 
 import java.util.List;
 
@@ -54,6 +56,15 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
     @BindView(R.id.refresh_layout)
     RefreshLayout mRefreshLayout;
 
+    @BindView(R.id.top_hint)
+    TopHintView mHintView;
+
+    @OnClick(R.id.new_ques_btn)
+    protected void to_new_ques() {
+        openActivity(NewQuesActivity.class);
+        playOpenAnimation();
+    }
+
     MainAdapter mAdapter;
 
     List<Row> mQRowList;
@@ -66,11 +77,13 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
 
     @Override
     public void onWillLoadView() {
+
     }
 
     @Override
     public void onDidLoadView() {
         ViewServer.get(this).addWindow(this);
+        setFullScreen();
         initMenu();
         initContentView();
         refreshListDataFromNet();
@@ -102,17 +115,17 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
             public View getView(int position, View convertView, ViewGroup parent) {
                 ViewHolder holder = ViewHolder.get(superCtx, convertView, R.layout.menu_list_item, position, parent);
                 holder.setImageResource(R.id.icon, mMenuIcon[position]);
-                if(UserUtil.isLogin(superCtx)){
-                    if(UserUtil.getIsStaff(superCtx)){
+                if (UserUtil.isLogin(superCtx)) {
+                    if (UserUtil.getIsStaff(superCtx)) {
                         holder.setImageResource(R.id.icon, mMenuIcon[position]);
-                        holder.setText(R.id.text,mMenuTextStaff[position]);
-                    }else{
+                        holder.setText(R.id.text, mMenuTextStaff[position]);
+                    } else {
                         holder.setImageResource(R.id.icon, mMenuIcon[position]);
-                        holder.setText(R.id.text,mMenuTextComm[position]);
+                        holder.setText(R.id.text, mMenuTextComm[position]);
                     }
-                }else{
+                } else {
                     holder.setImageResource(R.id.icon, mMenuIcon[position]);
-                    holder.setText(R.id.text,mMenuTextVisitor[position]);
+                    holder.setText(R.id.text, mMenuTextVisitor[position]);
                 }
                 return holder.getConvertView();
             }
@@ -122,20 +135,22 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        if(UserUtil.isLogin(superCtx)){
-                            if(UserUtil.getIsStaff(superCtx)){
+                        if (UserUtil.isLogin(superCtx)) {
+                            if (UserUtil.getIsStaff(superCtx)) {
                                 showToast("我的回答");
-                            }else{
+                            } else {
                                 showToast("我的提问");
                             }
-                        }else{
+                        } else {
                             openActivity(LoginActivity.class);
+                            playOpenAnimation();
+
                         }
                         break;
                     case 1:
                         UserUtil.clear(superCtx);
                         mSlideMenu.close();
-                        ((BaseAdapter)mMenuList.getAdapter()).notifyDataSetChanged();
+                        ((BaseAdapter) mMenuList.getAdapter()).notifyDataSetChanged();
                         showToast("退出成功");
                         openActivity(LoginActivity.class);
                         break;
@@ -149,12 +164,13 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
         RetrofitHelper.getInstance().getQList(new Subscriber<Data>() {
             @Override
             public void onCompleted() {
-                showToast("更新成功");
+                mRefreshLayout.refreshDownComplete();
+                mHintView.setHintText("获得" + mQRowList.size() + "条消息");
             }
 
             @Override
             public void onError(Throwable e) {
-                showToast(e.getMessage());
+                mHintView.setHintText(e.getMessage());
                 mRefreshLayout.refreshDownComplete();
             }
 
@@ -162,7 +178,6 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
             public void onNext(Data data) {
                 mQRowList = data.getRows();
                 mAdapter.notifyDataSetChanged();
-                mRefreshLayout.refreshDownComplete();
             }
         });
     }
@@ -233,7 +248,8 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
                     mainHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            openWebActivity(mQRowList.get(position-1).getQuestionUrl(),"问题详情");
+                            openWebActivity(mQRowList.get(position - 1).getQuestionUrl(), "问题详情");
+                            playOpenAnimation();
                         }
                     });
                     break;
@@ -341,6 +357,11 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
     protected void onResume() {
         super.onResume();
         ViewServer.get(this).setFocusedWindow(this);
+        // activity苏醒时需要根据当前登录状态更新menu列表的数据
+        if (mMenuList.getAdapter() != null) {
+            BaseAdapter adapter = (BaseAdapter) mMenuList.getAdapter();
+            adapter.notifyDataSetChanged();
+        }
     }
 
 }

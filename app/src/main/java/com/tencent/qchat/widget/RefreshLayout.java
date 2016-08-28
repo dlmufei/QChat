@@ -110,6 +110,7 @@ public class RefreshLayout extends LinearLayout {
                 if (getScrollY() < mListHeight - DISTANCE_BEGIN_REFRESH) {    //  达到了下拉刷新的范围
                     smoothScrollTo(mListHeight - DISTANCE_BEGIN_REFRESH);
                     mHeaderTextView.setText(HEADER_REFRESHING);
+//                    mStartTime = System.currentTimeMillis();
                     if (mRefreshListener != null) {
                         mRefreshListener.onRefreshDown();
                     }
@@ -130,12 +131,6 @@ public class RefreshLayout extends LinearLayout {
         }
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMinimumHeight(3 * mListHeight);
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
-
     protected boolean canDown() {
         return ((LinearLayoutManager) mRecyclerView.getLayoutManager())
                 .findFirstCompletelyVisibleItemPosition() == 0;
@@ -144,6 +139,12 @@ public class RefreshLayout extends LinearLayout {
     protected boolean canUp() {
         return ((LinearLayoutManager) mRecyclerView.getLayoutManager())
                 .findLastCompletelyVisibleItemPosition() == mRecyclerView.getAdapter().getItemCount() - 1;
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        setMinimumHeight(3 * mListHeight);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
@@ -169,9 +170,23 @@ public class RefreshLayout extends LinearLayout {
         return (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.widget_refresh_layout_header, null);
     }
 
+//    protected long mStartTime;    //  记录开始刷新的时间,方式刷新过快影响体验,把刷新时间控制在500毫秒以外
+//    protected long mMinRefreshTime = 400; //  最小的刷新时间
+
     public void refreshDownComplete() {
-        mHeaderTextView.setText(HEADER_REFRESHED);
-        if (mListHeight > 0) smoothScrollTo(mListHeight);
+        if (mAnimator.isRunning()) {
+            mAnimator.cancel();
+            mAnimator.removeAllUpdateListeners();
+        }
+        scrollTo(mListHeight);
+//        long end = System.currentTimeMillis();
+//        mHeaderTextView.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                mHeaderTextView.setText(HEADER_REFRESHED);
+//                if (mListHeight > 0) scrollTo(mListHeight);
+//            }
+//        }, end - mStartTime < mMinRefreshTime ? mMinRefreshTime - end + mStartTime : 0);
     }
 
     public void setOnRefreshListener(OnRefreshListener listener) {
@@ -179,6 +194,7 @@ public class RefreshLayout extends LinearLayout {
     }
 
     public interface OnRefreshListener {
+
         void onRefreshDown();
 
         void onRefreshUp();
@@ -200,7 +216,7 @@ public class RefreshLayout extends LinearLayout {
         int src = getScrollY();
         final int dest = src + pos;
         if (dest < 0 || dest > 2 * mListHeight) return;
-        if (mAnimator.isRunning()){
+        if (mAnimator.isRunning()) {
             mAnimator.cancel();
             mAnimator.removeAllUpdateListeners();
         }

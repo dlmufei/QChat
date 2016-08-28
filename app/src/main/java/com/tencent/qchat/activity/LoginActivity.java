@@ -7,6 +7,9 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.JsonObject;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
+import com.tencent.mm.sdk.modelmsg.SendAuth;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.tencent.qchat.R;
 import com.tencent.qchat.constant.Config;
 import com.tencent.qchat.http.RetrofitHelper;
@@ -43,16 +46,25 @@ public class LoginActivity extends BaseActivity implements IUiListener {
 
     @Override
     public void onDidLoadView() {
+        setFullScreen();
         mTencentClient = Tencent.createInstance(Config.QQ_APP_ID, getApplicationContext());
     }
 
     public void openMainActivity() {
         startActivity(new Intent(this, MainActivity.class));
-        finish();
+        onBackPressed();
+        overridePendingTransition(R.anim.slide_clam,R.anim.slide_out_bottom);
     }
 
     public void wxLogin(View v) {
-        openMainActivity();
+        if (!App.mWxApi.isWXAppInstalled()) {
+            showToast("请先安装微信");
+            return;
+        }
+        SendAuth.Req req = new SendAuth.Req();
+        req.scope = "snsapi_userinfo";
+        req.state = "wechat_login";
+        App.mWxApi.sendReq(req);
     }
 
     public void qqLogin(View v) {
@@ -126,11 +138,10 @@ public class LoginActivity extends BaseActivity implements IUiListener {
 
                     @Override
                     public void onNext(JsonObject jsonObject) {
-                        UserUtil.setToken(superCtx,jsonObject.get("token").getAsString());
-                        UserUtil.setIsStaff(superCtx,jsonObject.get("is_staff").getAsBoolean());
-                        UserUtil.setIsLogin(superCtx,true);
-                        openActivity(MainActivity.class);
-                        finish();
+                        UserUtil.setToken(superCtx, jsonObject.get("token").getAsString());
+                        UserUtil.setIsStaff(superCtx, jsonObject.get("is_staff").getAsBoolean());
+                        UserUtil.setIsLogin(superCtx, true);
+                        openMainActivity();
                     }
                 });
     }
@@ -152,5 +163,11 @@ public class LoginActivity extends BaseActivity implements IUiListener {
     @Override
     public void onCancel() {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_clam,R.anim.slide_out_bottom);
     }
 }

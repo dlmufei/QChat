@@ -45,8 +45,7 @@ public class SlideMenu extends RelativeLayout {
      */
     public void open() {
         if (!mIsOpened) {
-            smoothScrollTo(0);
-            mIsOpened = true;
+            toggle();
         }
     }
 
@@ -55,8 +54,7 @@ public class SlideMenu extends RelativeLayout {
      */
     public void close() {
         if (mIsOpened) {
-            smoothScrollTo(mMenuWidth);
-            mIsOpened = false;
+            toggle();
         }
     }
 

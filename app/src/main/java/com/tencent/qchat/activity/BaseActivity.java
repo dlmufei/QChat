@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.tencent.qchat.R;
 import com.tencent.qchat.utils.LoadViewInterface;
 import com.tencent.qchat.utils.ScreenUtil;
-import com.tencent.qchat.widget.SlideMenu;
 
 import butterknife.ButterKnife;
 
@@ -30,6 +29,7 @@ import butterknife.ButterKnife;
 public abstract class BaseActivity extends AppCompatActivity implements LoadViewInterface {
 
     Context superCtx;
+    ViewGroup mRootView;
 
     public void showToast(String msg) {
         if (TextUtils.isEmpty(msg)) return;
@@ -55,14 +55,11 @@ public abstract class BaseActivity extends AppCompatActivity implements LoadView
         if (layout == 0)
             throw new NullPointerException("you may forget to set the layout resource id ..." + getLocalClassName());
         onWillLoadView();
-        ViewGroup contentView = (ViewGroup) LayoutInflater.from(this).inflate(layout, null);
-        //如果不是SlideMenu,就给顶部添加一个占位view
-        if (!(contentView instanceof SlideMenu)) {
-            View blank = new View(this);
-            blank.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            contentView.addView(blank, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtil.getStatusBarHeight(this)));
-        }
-        setContentView(contentView);
+        mRootView = (ViewGroup) LayoutInflater.from(this).inflate(layout, null);
+        View blank = new View(this);
+        blank.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        mRootView.addView(blank, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtil.getStatusBarHeight(this)));
+        setContentView(mRootView);
         ButterKnife.bind(this);
         onDidLoadView();
     }
@@ -71,11 +68,15 @@ public abstract class BaseActivity extends AppCompatActivity implements LoadView
         startActivity(new Intent(this, clz));
     }
 
-    protected void openWebActivity(String url,String title) {
+    protected void openWebActivity(String url, String title) {
         Intent intent = new Intent(this, WebActivity.class);
         intent.putExtra(WebActivity.URL, url)
-                .putExtra(WebActivity.TITLE,title);
+                .putExtra(WebActivity.TITLE, title);
         startActivity(intent);
+    }
+
+    protected void setFullScreen() {
+        mRootView.removeViewAt(0);
     }
 
     /**

@@ -19,7 +19,7 @@ public class TimeUtil {
         long sec = msec / 1000;
         String result = "太久远";
         if (sec < SEC_PER_MIN) {
-            result = "刚刚";
+            result = "一分钟前";
         } else if (sec < SEC_PER_HOUR) {
             result = sec / SEC_PER_MIN + "分钟前";
         } else if (sec < SEC_PER_DAY) {
