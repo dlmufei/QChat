@@ -11,6 +11,7 @@ import rx.Observable;
 
 import static com.tencent.qchat.constant.Config.LOGIN;
 import static com.tencent.qchat.constant.Config.Q_LIST;
+import static com.tencent.qchat.constant.Config.MSG_LIST;
 
 
 /**
@@ -22,9 +23,14 @@ public interface EndPointInterface {
     @GET(Q_LIST)
     Observable<HttpResult<Data>> getQList();
 
+    @GET(MSG_LIST)
+    Observable<HttpResult<Data>> getMSGList();
+
     @FormUrlEncoded
     @POST(LOGIN)
     Observable<HttpResult<JsonObject>> login(@Field("nickname") String nick, @Field("avatar") String avatar,
                            @Field("open_type") String open_type, @Field("open_id") String open_id,
                            @Field("device_type") String device_type);
+
+
 }

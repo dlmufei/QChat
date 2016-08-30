@@ -67,6 +67,18 @@ public class RetrofitHelper {
                 .subscribe(subscriber);
     }
 
+    /**
+     * 获取通知列表
+     */
+    public void getMSGList(Subscriber<Data> subscriber){
+        mEndPointInterface.getQList()
+                .map(new HttpResultFilter<Data>())
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+
+    }
+
     protected class HttpResultFilter<T> implements Func1<HttpResult<T>, T> {
 
         @Override

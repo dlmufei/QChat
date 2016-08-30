@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.debug.hv.ViewServer;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -345,6 +346,12 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
     @OnClick(R.id.logo)
     void to_logo() {
         mSlideMenu.toggle();
+    }
+
+    @OnClick(R.id.msg)
+    void to_msg(){
+        openActivity(MsgActivity.class);
+        playOpenAnimation();
     }
 
     @Override
