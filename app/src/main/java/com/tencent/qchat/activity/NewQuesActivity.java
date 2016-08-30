@@ -22,6 +22,13 @@ public class NewQuesActivity extends BaseActivity {
 
     }
 
+    @OnClick(R.id.invite)
+    protected void to_invite(){
+        openActivity(InviteActivity.class);
+        playOpenAnimation();
+    }
+
+
     @Override
     public int initLayoutRes() {
         return R.layout.activity_new_ques;

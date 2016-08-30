@@ -19,6 +19,7 @@
         <activity android:name=".activity.WebActivity"/>
         <activity android:name=".activity.NewQuesActivity"/>
         <activity android:name=".activity.MsgActivity"/>
+        <activity android:name=".activity.InviteActivity"/>
         <activity
             android:name=".activity.SplashActivity"
             android:theme="@style/SplashActivityStyle">

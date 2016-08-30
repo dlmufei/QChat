@@ -8,6 +8,7 @@
         android:id="@+id/back"
         android:layout_width="20dp"
         android:layout_height="20dp"
+        android:clickable="true"
         android:layout_centerVertical="true"
         android:src="@drawable/toolbar_back"
         />
@@ -31,6 +32,7 @@
         android:textSize="@dimen/system_main_text_normal"
         android:layout_centerVertical="true"
         android:textColor="@android:color/white"
+        android:layout_marginRight="5dp"
         android:layout_alignParentRight="true"/>
 
 </RelativeLayout>

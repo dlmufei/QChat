@@ -1,5 +1,6 @@
 package com.tencent.qchat.activity;
 
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -12,16 +13,19 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * 消息通知页面
+ * 邀请回答者列表页
+ *
  * Created by cliffyan on 2016/8/30.
  */
-public class MsgActivity extends BaseActivity {
+public class InviteActivity extends BaseActivity {
 
     @BindView(R.id.title)
     TextView mTitleView;
+    @BindView(R.id.more_tv)
+    TextView mPostView;
 
-    @BindView(R.id.msg_list)
-    ListView mMsgList;
+    @BindView(R.id.invite_list)
+    ListView mInviteList;
 
     @OnClick(R.id.back)
     protected void to_back() {
@@ -30,7 +34,7 @@ public class MsgActivity extends BaseActivity {
 
     @Override
     public int initLayoutRes() {
-        return R.layout.activity_msg;
+        return R.layout.acvity_invite;
     }
 
     @Override
@@ -40,7 +44,8 @@ public class MsgActivity extends BaseActivity {
 
     @Override
     public void onDidLoadView() {
-        mTitleView.setText("通知");
+        mTitleView.setText("邀请回答者");
+        mPostView.setText("保存");
 
 
 
@@ -52,8 +57,9 @@ public class MsgActivity extends BaseActivity {
         playExitAnimation();
     }
 
+
     private void initListView(){
-        mMsgList.setAdapter(new BaseAdapter() {
+        mInviteList.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
                 return 0;
@@ -65,5 +71,4 @@ public class MsgActivity extends BaseActivity {
             }
         });
     }
-
 }

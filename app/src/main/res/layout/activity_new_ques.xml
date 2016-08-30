@@ -5,8 +5,10 @@
     android:orientation="vertical">
     <include layout="@layout/widget_toolbar"/> 
     <RelativeLayout
+        android:id="@+id/invite"
         android:layout_width="match_parent"
         android:gravity="center_vertical"
+        android:clickable="true"
         android:padding="10dp"
         android:layout_height="wrap_content">
         <TextView
@@ -15,13 +17,14 @@
             android:gravity="center"
             android:text="请选择问题的回答者"
             android:textSize="@dimen/system_main_text_normal"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageView
+            android:id="@+id/invite_iv"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
             android:gravity="center"
-            android:text=">"
-            android:textSize="@dimen/system_main_text_normal"/>
+            android:src="@drawable/go_answers"/>
     </RelativeLayout>
     <EditText
         android:padding="10dp"
