@@ -10,6 +10,7 @@
         android:id="@+id/staff_avatar"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:focusable="false"
         android:layout_marginLeft="20dp"
         fresco:roundAsCircle="true" />
 
@@ -31,6 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#515151"
+                android:focusable="false"
                 android:textSize="18dp"
                 android:text="昵称" />
 
@@ -39,6 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#515151"
+                android:focusable="false"
                 android:textSize="18dp"
                 android:text="." />
 
@@ -48,6 +51,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="#515151"
                 android:textSize="18dp"
+                android:focusable="false"
                 android:maxLength="15"
                 android:text="头衔" />
 
@@ -58,6 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
+            android:focusable="false"
             android:textSize="16dp"
             android:text="擅长领域" />
     </LinearLayout>
@@ -68,6 +73,7 @@
         style="@style/CustomCheckboxTheme"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:focusable="false"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp" />

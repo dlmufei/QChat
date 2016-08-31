@@ -7,6 +7,7 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -60,10 +61,15 @@ public class ViewHolder {
 		return this;
 	}
 
-	public ViewHolder setImageUrl(int viewId, Uri uri)
-	{
+	public ViewHolder setImageUrl(int viewId, Uri uri){
 		SimpleDraweeView sdv=getView(viewId);
 		sdv.setImageURI(uri);
+		return this;
+	}
+
+	public ViewHolder setCheckBox(int viewId,boolean checked){
+		CheckBox cb=getView(viewId);
+		cb.setChecked(checked);
 		return this;
 	}
 
