@@ -1,6 +1,7 @@
 package com.tencent.qchat.activity;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tencent.qchat.R;
 
@@ -16,10 +17,14 @@ public class NewQuesActivity extends BaseActivity {
     TextView mTitleView;
     @BindView(R.id.more_tv)
     TextView mPostView;
+    @OnClick(R.id.back)
+    protected void to_back() {
+        onBackPressed();
+    }
 
     @OnClick(R.id.more_tv)
     protected void to_post_ques(){
-
+        Toast.makeText(this,"发布",Toast.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.invite)

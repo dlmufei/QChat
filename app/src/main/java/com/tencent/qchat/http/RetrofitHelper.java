@@ -3,6 +3,7 @@ package com.tencent.qchat.http;
 import com.google.gson.JsonObject;
 import com.tencent.qchat.constant.Config;
 import com.tencent.qchat.model.Data;
+import com.tencent.qchat.model.StaffData;
 
 import java.util.concurrent.TimeUnit;
 
@@ -78,6 +79,18 @@ public class RetrofitHelper {
                 .subscribe(subscriber);
 
     }
+
+    /**
+     * 获取回答者列表
+     */
+    public void getStaffList(Subscriber<StaffData> subscriber){
+        mEndPointInterface.getStaffList()
+                .map(new HttpResultFilter<StaffData>())
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
 
     protected class HttpResultFilter<T> implements Func1<HttpResult<T>, T> {
 

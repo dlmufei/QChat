@@ -2,12 +2,15 @@ package com.tencent.qchat.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.facebook.drawee.view.SimpleDraweeView;
 
 public class ViewHolder {
 	private SparseArray<View> mViews;
@@ -54,6 +57,13 @@ public class ViewHolder {
 	public ViewHolder setImageResource(int viewId, int resId) {
 		ImageView iv = getView(viewId);
 		iv.setImageResource(resId);
+		return this;
+	}
+
+	public ViewHolder setImageUrl(int viewId, Uri uri)
+	{
+		SimpleDraweeView sdv=getView(viewId);
+		sdv.setImageURI(uri);
 		return this;
 	}
 

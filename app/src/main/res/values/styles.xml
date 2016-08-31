@@ -52,4 +52,9 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <!--邀请回答者checkbox-->
+    <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/checkbox_style</item>
+    </style>
+
 </resources>

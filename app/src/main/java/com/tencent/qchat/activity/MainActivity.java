@@ -67,7 +67,6 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
     }
 
     MainAdapter mAdapter;
-
     List<Row> mQRowList;
 
 

@@ -2,6 +2,7 @@ package com.tencent.qchat.http;
 
 import com.google.gson.JsonObject;
 import com.tencent.qchat.model.Data;
+import com.tencent.qchat.model.StaffData;
 
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -12,6 +13,7 @@ import rx.Observable;
 import static com.tencent.qchat.constant.Config.LOGIN;
 import static com.tencent.qchat.constant.Config.Q_LIST;
 import static com.tencent.qchat.constant.Config.MSG_LIST;
+import static com.tencent.qchat.constant.Config.STAFF_LIST;
 
 
 /**
@@ -25,6 +27,11 @@ public interface EndPointInterface {
 
     @GET(MSG_LIST)
     Observable<HttpResult<Data>> getMSGList();
+
+    @GET(STAFF_LIST)
+    Observable<HttpResult<StaffData>> getStaffList();
+
+
 
     @FormUrlEncoded
     @POST(LOGIN)
