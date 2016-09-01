@@ -61,15 +61,9 @@ public class InviteActivity extends BaseActivity {
         bundle.putIntegerArrayList(IDS,ids);
         bundle.putStringArrayList(AVATARS,avatars);
         intent.putExtra(DATA,bundle);
-        if (ids==null||ids.size()==0)
-            setResult(RESULT_ERR);
-        else{
-            setResult(RESULT_SUC,intent);
-        }
+        setResult(RESULT_SUC,intent);
         this.finish();
     }
-
-
 
 
 
@@ -84,7 +78,9 @@ public class InviteActivity extends BaseActivity {
     @Override
     public void onWillLoadView() {
         ids = getIntent().getExtras().getBundle(DATA).getIntegerArrayList(IDS);
+        avatars = getIntent().getExtras().getBundle(DATA).getStringArrayList(AVATARS);
         Log.i("ids",ids==null?"null":ids.toString());
+        Log.i("ids",avatars==null?"null":avatars.toString());
     }
 
     @Override
@@ -103,7 +99,6 @@ public class InviteActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(InviteActivity.this,"显示详情页"+position,Toast.LENGTH_SHORT).show();
-
             }
         });
 
@@ -166,8 +161,12 @@ public class InviteActivity extends BaseActivity {
                 public void onClick(View v) {
                     CheckBox cb = (CheckBox)v;
                     if (ids==null) ids=new ArrayList<>();
+                    if (avatars==null) avatars=new ArrayList<>();
                     if (cb.isChecked()){
-                        if (!ids.contains(mStaffRows.get(p).getId())){
+                        if (ids.size()>=3){
+                            showToast("最多可选三位回答者");
+                            cb.setChecked(false);
+                        }else if (!ids.contains(mStaffRows.get(p).getId())){
                             ids.add(mStaffRows.get(p).getId());
                             avatars.add(mStaffRows.get(p).getAvatar());
                         }

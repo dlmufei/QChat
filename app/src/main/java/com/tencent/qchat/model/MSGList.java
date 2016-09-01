@@ -7,7 +7,7 @@ public class MsgList {
 
     private Integer code;
     private String message;
-    private Data data;
+    private MsgData data;
 
     public Integer getCode() {
         return code;
@@ -25,11 +25,11 @@ public class MsgList {
         this.message = message;
     }
 
-    public Data getData() {
+    public MsgData getData() {
         return data;
     }
 
-    public void setData(Data data) {
+    public void setData(MsgData data) {
         this.data = data;
     }
 

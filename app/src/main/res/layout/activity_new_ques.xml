@@ -3,22 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <include layout="@layout/widget_toolbar"/> 
+
+    <include layout="@layout/widget_toolbar" />
+
     <RelativeLayout
         android:id="@+id/invite"
         android:layout_width="match_parent"
-        android:gravity="center_vertical"
+        android:layout_height="wrap_content"
         android:clickable="true"
-        android:padding="10dp"
-        android:layout_height="wrap_content">
+        android:gravity="center_vertical"
+        android:padding="10dp">
+
         <TextView
             android:id="@+id/tv_selectStaff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="请选择问题的回答者"
-            android:textSize="@dimen/system_main_text_normal"/>
-        
+            android:textSize="@dimen/system_main_text_normal" />
+
         <ImageView
             android:id="@+id/invite_iv"
             android:layout_width="20dp"
@@ -26,20 +29,61 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="5dp"
             android:gravity="center"
-            android:src="@drawable/go_answers"/>
+            android:src="@drawable/go_answers" />
+
+        <GridView
+            android:id="@+id/gv_selectStaff"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:layout_toRightOf="@id/tv_selectStaff"
+            android:clickable="false"
+            android:focusable="false"
+            android:numColumns="3" />
+
+
     </RelativeLayout>
-    <EditText
-        android:id="@+id/et_question"
-        android:padding="10dp"
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:hint="请输入想提问的问题"
-        android:background="@null"
-        android:gravity="start|left"
-        android:textColorHint="@android:color/darker_gray"/>
+        android:layout_height="160dp">
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/pen"/>
+
+        <EditText
+            android:id="@+id/et_question"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:background="@null"
+            android:gravity="start|left"
+            android:hint="请输入想提问的问题"
+            android:textSize="18dp"
+            android:maxLength="80"
+            android:paddingTop="8dp"
+            android:paddingLeft="30dp"
+            android:textColorHint="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/tv_textNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginRight="8dp"
+            android:gravity="end|right"
+            android:text="0/80" />
+
+    </RelativeLayout>
+
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#f3f3f3"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:background="#f3f3f3" />
 </LinearLayout>

@@ -3,8 +3,10 @@ package com.tencent.qchat.http;
 import com.google.gson.JsonObject;
 import com.tencent.qchat.constant.Config;
 import com.tencent.qchat.model.Data;
+import com.tencent.qchat.model.MsgData;
 import com.tencent.qchat.model.StaffData;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -71,14 +73,26 @@ public class RetrofitHelper {
     /**
      * 获取通知列表
      */
-    public void getMSGList(Subscriber<Data> subscriber){
-        mEndPointInterface.getQList()
-                .map(new HttpResultFilter<Data>())
+    public void getMSGList(Subscriber<MsgData> subscriber){
+        mEndPointInterface.getMSGList()
+                .map(new HttpResultFilter<MsgData>())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
 
     }
+
+    /**
+     * 增加一个提问
+     */
+    public void addQuestion(String token,String content,ArrayList<Integer> staffIds,Subscriber<JsonObject> subscriber){
+        mEndPointInterface.addQuestion(token, content, staffIds)
+                .map(new HttpResultFilter<JsonObject>())
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
 
     /**
      * 获取回答者列表
