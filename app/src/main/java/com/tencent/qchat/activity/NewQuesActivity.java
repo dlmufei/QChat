@@ -81,12 +81,17 @@ public class NewQuesActivity extends BaseActivity {
 
             @Override
             public void onNext(JsonObject jsonObject) {
-                if (jsonObject.get("code").getAsInt()==0){
-                    showToast("发布成功");
-                }else {
-                    showToast(jsonObject.get("message").getAsString());
-                }
+                Log.i("jsonObject",jsonObject.toString());//TODO
+                showToast("发布成功");
+                NewQuesActivity.this.finish();
 
+                //TODO
+                /*if (jsonObject.get("code").getAsInt()!=0){
+                    showToast(jsonObject.get("message").getAsString());
+                }else {
+                    showToast("发布成功");
+                    NewQuesActivity.this.finish();
+                }*/
             }
         });
     }
@@ -145,9 +150,6 @@ public class NewQuesActivity extends BaseActivity {
                    R.layout.select_staff_grid_item, new String[] { "url"}, new int[] {
                    R.id.selectedstaff_avatar});
            mSelectStaffGrid.setAdapter(simpleAdapter);
-
-           Log.i("ids",ids.toString());
-           Log.i("avatars",avatars.toString());
 
        }
     }

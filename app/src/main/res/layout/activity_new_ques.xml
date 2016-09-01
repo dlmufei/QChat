@@ -34,7 +34,7 @@
         <GridView
             android:id="@+id/gv_selectStaff"
             android:layout_width="150dp"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_toRightOf="@id/tv_selectStaff"
             android:clickable="false"
             android:focusable="false"
@@ -50,9 +50,9 @@
         <ImageView
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
-            android:src="@mipmap/pen"/>
+            android:layout_marginTop="10dp"
+            android:src="@mipmap/pen" />
 
         <EditText
             android:id="@+id/et_question"
@@ -61,11 +61,11 @@
             android:background="@null"
             android:gravity="start|left"
             android:hint="请输入想提问的问题"
-            android:textSize="18dp"
             android:maxLength="80"
-            android:paddingTop="8dp"
             android:paddingLeft="30dp"
-            android:textColorHint="@android:color/darker_gray" />
+            android:paddingTop="8dp"
+            android:textColorHint="@android:color/darker_gray"
+            android:textSize="18dp" />
 
         <TextView
             android:id="@+id/tv_textNum"
