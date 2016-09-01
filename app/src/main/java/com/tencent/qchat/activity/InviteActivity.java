@@ -13,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.tencent.qchat.R;
@@ -84,6 +83,7 @@ public class InviteActivity extends BaseActivity {
     public void onWillLoadView() {
         ids = getIntent().getExtras().getBundle(DATA).getIntegerArrayList(IDS);
         avatars = getIntent().getExtras().getBundle(DATA).getStringArrayList(AVATARS);
+        //TODO
         Log.i("ids", ids == null ? "null" : ids.toString());
         Log.i("ids", avatars == null ? "null" : avatars.toString());
     }

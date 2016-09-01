@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.tencent.qchat.model.Data;
 import com.tencent.qchat.model.MsgData;
 import com.tencent.qchat.model.StaffData;
+import com.tencent.qchat.model.StaffMsgData;
 
 import java.util.ArrayList;
 
@@ -33,6 +34,10 @@ public interface EndPointInterface {
     //通知列表信息
     @GET(MSG_LIST)
     Observable<HttpResult<MsgData>> getMSGList();
+
+    //回答者通知列表信息
+    @GET(MSG_LIST)
+    Observable<HttpResult<StaffMsgData>> getStaffMsgList();
 
     //获取邀请回答者
     @GET(STAFF_LIST)

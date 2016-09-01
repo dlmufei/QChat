@@ -5,6 +5,7 @@ import com.tencent.qchat.constant.Config;
 import com.tencent.qchat.model.Data;
 import com.tencent.qchat.model.MsgData;
 import com.tencent.qchat.model.StaffData;
+import com.tencent.qchat.model.StaffMsgData;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -100,6 +101,17 @@ public class RetrofitHelper {
     public void getStaffList(Subscriber<StaffData> subscriber){
         mEndPointInterface.getStaffList()
                 .map(new HttpResultFilter<StaffData>())
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    /**
+     * 获取回答者通知信息列表
+     */
+    public void getStaffMsgList(Subscriber<StaffMsgData> subscriber){
+        mEndPointInterface.getStaffMsgList()
+                .map(new HttpResultFilter<StaffMsgData>())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);

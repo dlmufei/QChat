@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:background="#e6e6e6">
         <ListView
-            android:id="@+id/msg_list"
+            android:id="@+id/staff_msg_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

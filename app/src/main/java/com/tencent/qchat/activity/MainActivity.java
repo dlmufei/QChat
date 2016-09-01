@@ -8,12 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.debug.hv.ViewServer;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -349,7 +347,11 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
 
     @OnClick(R.id.msg)
     void to_msg(){
-        openActivity(MsgActivity.class);
+        if (UserUtil.getIsStaff(this)){
+            openActivity(StaffMsgActivity.class);
+        }else {
+
+        }
         playOpenAnimation();
     }
 

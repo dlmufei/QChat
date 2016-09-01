@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="70dp"
     android:orientation="horizontal"
+    android:background="#ffffff"
     android:gravity="center_vertical">
 
-    <include layout="@layout/staff_summer" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="8dp">
+        <include layout="@layout/staff_summer" />
+    </RelativeLayout>
 
     <CheckBox
         android:id="@+id/cb_staff"
@@ -16,6 +24,14 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="20dp"
+        android:background="#e6e6e6"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="20dp" />
 
 
 </RelativeLayout>
