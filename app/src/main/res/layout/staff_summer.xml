@@ -6,8 +6,8 @@
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/staff_avatar"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_marginLeft="20dp"
         android:focusable="false"
         fresco:roundAsCircle="true" />
@@ -64,6 +64,6 @@
             android:layout_marginTop="3dp"
             android:focusable="false"
             android:text="擅长领域"
-            android:textSize="16dp" />
+            android:textSize="15dp" />
     </LinearLayout>
 </RelativeLayout>
