@@ -13,6 +13,7 @@ import com.tencent.qchat.model.StaffMsgData;
 import com.tencent.qchat.model.StaffMsgRow;
 import com.tencent.qchat.utils.BaseAdapter;
 import com.tencent.qchat.utils.TimeUtil;
+import com.tencent.qchat.utils.UserUtil;
 import com.tencent.qchat.utils.ViewHolder;
 
 import java.util.List;
@@ -32,6 +33,11 @@ public class StaffMsgActivity extends BaseActivity {
 
     @BindView(R.id.staff_msg_list)
     ListView mStaffMsgList;
+
+    @BindView(R.id.no_item_tip)
+    View mEmptyTip;
+
+
 
     List<StaffMsgRow> mStaffMsgRows;
     StaffMsgListAdapter mAdapter;
@@ -59,7 +65,9 @@ public class StaffMsgActivity extends BaseActivity {
     }
 
     private void initView() {
+
         mAdapter=new StaffMsgListAdapter();
+        mStaffMsgList.setEmptyView(mEmptyTip);
         mStaffMsgList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -76,8 +84,7 @@ public class StaffMsgActivity extends BaseActivity {
     }
 
     protected void getListDataFromNet() {
-        RetrofitHelper.getInstance().getStaffMsgList(new Subscriber<StaffMsgData>() {
-
+        RetrofitHelper.getInstance().getStaffMsgList(UserUtil.getToken(this),new Subscriber<StaffMsgData>() {
 
             @Override
             public void onCompleted() {

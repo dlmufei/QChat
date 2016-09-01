@@ -39,6 +39,7 @@ public class UserMsgActivity extends BaseActivity {
     @BindView(R.id.title)
     TextView mTitleView;
 
+
     List<Row> mMsgList;
     MsgAdapter mAdapter;
 
@@ -56,9 +57,11 @@ public class UserMsgActivity extends BaseActivity {
     public void onDidLoadView() {
         mTitleView.setText("通知");
         mAdapter = new MsgAdapter();
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration(mAdapter.new MsgDivider(ScreenUtil.dp2px(this, 10)));
         mRecyclerView.setAdapter(mAdapter);
+
     }
 
     protected void refreshListDataFromNet() {

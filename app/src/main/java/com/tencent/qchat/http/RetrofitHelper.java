@@ -72,17 +72,6 @@ public class RetrofitHelper {
                 .subscribe(subscriber);
     }
 
-    /**
-     * 获取通知列表
-     */
-    public void getMSGList(Subscriber<MsgData> subscriber){
-        mEndPointInterface.getMSGList()
-                .map(new HttpResultFilter<MsgData>())
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(subscriber);
-
-    }
 
     /**
      * 普通用户获取通知列表
@@ -121,8 +110,8 @@ public class RetrofitHelper {
     /**
      * 获取回答者通知信息列表
      */
-    public void getStaffMsgList(Subscriber<StaffMsgData> subscriber){
-        mEndPointInterface.getStaffMsgList()
+    public void getStaffMsgList(String token,Subscriber<StaffMsgData> subscriber){
+        mEndPointInterface.getStaffMsgList(token)
                 .map(new HttpResultFilter<StaffMsgData>())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
