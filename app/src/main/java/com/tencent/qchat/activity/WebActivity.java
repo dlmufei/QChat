@@ -6,6 +6,7 @@ import com.tencent.qchat.R;
 import com.tencent.qchat.widget.XWebView;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by hiwang on 16/8/27.
@@ -17,6 +18,11 @@ public class WebActivity extends BaseActivity {
 
     @BindView(R.id.title)
     TextView mTitleView;
+
+    @OnClick(R.id.back)
+    protected void to_back() {
+        onBackPressed();
+    }
 
     public static final String URL = "target_url";  //  网页链接
     public static final String TITLE="page_title";  //  页面的标题

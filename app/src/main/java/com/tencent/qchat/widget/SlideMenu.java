@@ -31,7 +31,7 @@ public class SlideMenu extends RelativeLayout {
     private Context mContext;
     private int mScreenWidth;   //  屏幕宽度 px
     private int mMenuWidth;     //  菜单宽度 px
-    private int mRightPadding;  //  菜单完全展开时,菜单右侧举例屏幕右侧的距离 px
+    private int mRightPadding;  //  菜单完全展开时,菜单右侧距离屏幕右侧的距离 px
 
     private boolean mFirstMeasure = true;
 

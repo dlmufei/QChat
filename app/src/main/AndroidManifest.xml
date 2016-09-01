@@ -18,6 +18,9 @@
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.WebActivity"/>
         <activity android:name=".activity.NewQuesActivity"/>
+        <activity android:name=".activity.MsgActivity"/>
+        <activity android:name=".activity.InviteActivity"/>
+        <activity android:name=".activity.UserMsgActivity"/>
         <activity
             android:name=".activity.SplashActivity"
             android:theme="@style/SplashActivityStyle">
@@ -49,7 +52,11 @@
         <!--QQ登录结束-->
         <!--微信登录开始-->
         <activity android:name=".wxapi.WXEntryActivity"
-            android:exported="true"/>
+            android:exported="true"/><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
         <!--微信登录结束-->
     </application>
 

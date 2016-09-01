@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.debug.hv.ViewServer;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -66,7 +67,6 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
     }
 
     MainAdapter mAdapter;
-
     List<Row> mQRowList;
 
 
@@ -345,6 +345,14 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
     @OnClick(R.id.logo)
     void to_logo() {
         mSlideMenu.toggle();
+    }
+
+    @OnClick(R.id.msg)
+    void to_msg(){
+        if(UserUtil.isLogin(this)&&!UserUtil.getIsStaff(this)){//普通登录用户
+            openActivity(UserMsgActivity.class);
+            playOpenAnimation();
+        }
     }
 
     @Override
