@@ -18,6 +18,8 @@ import rx.Observable;
 
 import static com.tencent.qchat.constant.Config.LOGIN;
 import static com.tencent.qchat.constant.Config.MSG_USER;
+import static com.tencent.qchat.constant.Config.MY_A_LIST;
+import static com.tencent.qchat.constant.Config.MY_Q_LIST;
 import static com.tencent.qchat.constant.Config.Q_ADD;
 import static com.tencent.qchat.constant.Config.Q_LIST;
 import static com.tencent.qchat.constant.Config.MSG_LIST;
@@ -34,10 +36,6 @@ public interface EndPointInterface {
     @GET(Q_LIST)
     Observable<HttpResult<Data>> getQList();
 
-    //通知列表信息
-    @GET(MSG_LIST)
-    Observable<HttpResult<MsgData>> getMSGList();
-
     //回答者通知列表信息
     @GET(MSG_LIST)
     Observable<HttpResult<StaffMsgData>> getStaffMsgList();
@@ -48,6 +46,12 @@ public interface EndPointInterface {
 
     @GET(MSG_USER)
     Observable<HttpResult<Data>> getUserMsgList(@Query("token") String token);
+
+    @GET(MY_Q_LIST)
+    Observable<HttpResult<Data>> getMyQuesList(@Query("token") String token);
+
+    @GET(MY_A_LIST)
+    Observable<HttpResult<Data>> getMyAnswerList(@Query("token") String token);
 
 
     //登录

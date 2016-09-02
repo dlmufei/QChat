@@ -18,16 +18,13 @@ public class Config {
     public static final String Q_LIST = "question/list"; //  问题列表
     public static final String LOGIN = "user/login";  //  用户登录
 
-    public static final String MY_ANS_Q_LIST = "user/my-answered-question-list";  // 获取我回答的问题列表
+    public static final String MY_A_LIST = "user/my-answered-question-list";  // 获取我回答的问题列表
     public static final String STAFF_LIST="user/staff-list"; //获取回答者列表
     public static final String MY_Q_LIST="user/my-question-list"; //获取我的提问列表
     public static final String Q_ADD="question/add";//增加一个提问
 
     public static final String MSG_LIST = "notification/list";  // 通知列表
-    public static final String MSG_COUNT = "notification/count";  // 获取通知数量
-
     public static final String MSG_USER="notification/list";//获取普通用户的通知列表
-
 
     //消息通知的类型
     public static final String NOTI_NEW_Q="new_question";//有新的问题邀请你回答

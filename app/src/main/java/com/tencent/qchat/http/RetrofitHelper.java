@@ -73,15 +73,24 @@ public class RetrofitHelper {
     }
 
     /**
-     * 获取通知列表
+     * 获取我的提问列表
      */
-    public void getMSGList(Subscriber<MsgData> subscriber){
-        mEndPointInterface.getMSGList()
-                .map(new HttpResultFilter<MsgData>())
+    public void getMyQuesList(String token,Subscriber<Data> subscriber){
+        mEndPointInterface.getMyQuesList(token)
+                .map(new HttpResultFilter<Data>())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
-
+    }
+    /**
+     * 获取我的回答列表
+     */
+    public void getMyAnswerList(String token,Subscriber<Data> subscriber){
+        mEndPointInterface.getMyAnswerList(token)
+                .map(new HttpResultFilter<Data>())
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
     }
 
     /**

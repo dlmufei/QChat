@@ -1,5 +1,6 @@
 package com.tencent.qchat.activity;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
@@ -134,11 +135,14 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
                 switch (position) {
                     case 0:
                         if (UserUtil.isLogin(superCtx)) {
+                            Intent intent=new Intent(superCtx,MyQuesAnswerListActivity.class);
                             if (UserUtil.getIsStaff(superCtx)) {
-                                showToast("我的回答");
+                                intent.putExtra(MyQuesAnswerListActivity.TYPE,MyQuesAnswerListActivity.TYPE_ANSWER);
                             } else {
-                                showToast("我的提问");
+                                intent.putExtra(MyQuesAnswerListActivity.TYPE,MyQuesAnswerListActivity.TYPE_QUES);
                             }
+                            startActivity(intent);
+                            playOpenAnimation();
                         } else {
                             openActivity(LoginActivity.class);
                             playOpenAnimation();

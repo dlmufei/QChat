@@ -29,69 +29,113 @@ import rx.Subscriber;
 /**
  * Created by hiwang on 16/9/1.
  * <p/>
- * 普通用户的通知列表
+ * 我的通知--我的回答  界面
  */
-public class UserMsgActivity extends BaseActivity {
+public class MyQuesAnswerListActivity extends BaseActivity {
 
     @BindView(R.id.list)
     RecyclerView mRecyclerView;
     @BindView(R.id.title)
     TextView mTitleView;
 
-    List<Row> mMsgList;
-    MsgAdapter mAdapter;
+    List<Row> mQAList;
+    MQAAdapter mAdapter;
+
+    public static final String TYPE="qa_type";
+    public static final int TYPE_QUES=0x01,TYPE_ANSWER=0x02;
+    protected int mType;
 
     @Override
     public int initLayoutRes() {
-        return R.layout.activity_msg_user;
+        return R.layout.activity_ques_answer;
     }
 
     @Override
     public void onWillLoadView() {
+        mType=getIntent().getIntExtra(TYPE,0);
         refreshListDataFromNet();
     }
 
     @Override
     public void onDidLoadView() {
-        mTitleView.setText("通知");
-        mAdapter = new MsgAdapter();
+        switch (mType){
+            case TYPE_QUES:
+                mTitleView.setText("我的提问");
+                break;
+            case TYPE_ANSWER:
+                mTitleView.setText("我的回答");
+                break;
+        }
+        mAdapter = new MQAAdapter();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration(mAdapter.new MsgDivider(ScreenUtil.dp2px(this, 10)));
         mRecyclerView.setAdapter(mAdapter);
     }
 
     protected void refreshListDataFromNet() {
-        RetrofitHelper.getInstance().getUserMsgList(UserUtil.getToken(this), new Subscriber<Data>() {
-            @Override
-            public void onCompleted() {
-                showToast("获取成功");
-            }
+        switch (mType){
+            case TYPE_QUES:
+                RetrofitHelper.getInstance().getMyQuesList(UserUtil.getToken(this), new Subscriber<Data>() {
+                    @Override
+                    public void onCompleted() {
+                        showToast("获取成功");
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                showToast("加载失败");
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        showToast("加载失败");
+                    }
 
-            @Override
-            public void onNext(Data data) {
-                mMsgList = data.getRows();
-                mAdapter.notifyDataSetChanged();
-            }
-        });
+                    @Override
+                    public void onNext(Data data) {
+                        mQAList = data.getRows();
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
+                break;
+            case TYPE_ANSWER:
+                RetrofitHelper.getInstance().getMyAnswerList(UserUtil.getToken(this), new Subscriber<Data>() {
+                    @Override
+                    public void onCompleted() {
+                        showToast("获取成功");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        showToast("加载失败");
+                    }
+
+                    @Override
+                    public void onNext(Data data) {
+                        mQAList = data.getRows();
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
+                break;
+        }
+
     }
 
-    protected class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.MsgHolder> {
+    protected class MQAAdapter extends RecyclerView.Adapter<MQAAdapter.MQAHolder> {
 
 
         @Override
-        public MsgHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new MsgHolder(LayoutInflater.from(superCtx).inflate(R.layout.list_item_msg_user, null));
+        public MQAHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new MQAHolder(LayoutInflater.from(superCtx).inflate(R.layout.list_item_ques_answer, null));
         }
 
         @Override
-        public void onBindViewHolder(MsgHolder holder, final int position) {
-            Row row = mMsgList.get(position - 1);
-            MsgHolder msgHolder = holder;
+        public void onBindViewHolder(MQAHolder holder, final int position) {
+            Row row = mQAList.get(position - 1);
+            MQAHolder msgHolder = holder;
+            switch (mType){
+                case TYPE_QUES:
+                    msgHolder.mTypeView.setText("你的提问");
+                    break;
+                case TYPE_ANSWER:
+                    msgHolder.mTypeView.setText("你的回答");
+                    break;
+            }
             msgHolder.qContent.setText(row.getQuestionContent().replaceAll("(\r\n)+", "\n"));
             msgHolder.aNick.setText(row.getAnswerLead().getUserNickname());
             msgHolder.aTitle.setText(" · " + row.getAnswerLead().getUserTitle());
@@ -103,24 +147,18 @@ public class UserMsgActivity extends BaseActivity {
                 msgHolder.qCountLayout.setVisibility(View.VISIBLE);
                 msgHolder.aCount.setText("还有" + (row.getAnswerCount() - 1) + "个回答");
             }
-
             msgHolder.aAvatar.setImageURI(Uri.parse(row.getAnswerLead().getUserAvatar()));
-//            msgHolder.itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    openWebActivity(mMsgList.get(position - 1).getQuestionUrl(), "问题详情");
-//                    playOpenAnimation();
-//                }
-//            });
         }
 
         @Override
         public int getItemCount() {
-            return mMsgList == null ? 0 : mMsgList.size();
+            return mQAList == null ? 0 : mQAList.size();
         }
 
-        public class MsgHolder extends RecyclerView.ViewHolder {
+        public class MQAHolder extends RecyclerView.ViewHolder {
 
+            @BindView(R.id.type)
+            TextView mTypeView;
             @BindView(R.id.q_content)
             TextView qContent;
             @BindView(R.id.a_nick)
@@ -138,7 +176,7 @@ public class UserMsgActivity extends BaseActivity {
             @BindView(R.id.a_count_layout)
             LinearLayout qCountLayout;
 
-            public MsgHolder(View itemView) {
+            public MQAHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(itemView);
                 ButterKnife.bind(this, itemView);

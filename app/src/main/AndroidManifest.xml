@@ -21,6 +21,7 @@
         <activity android:name=".activity.StaffMsgActivity"/>
         <activity android:name=".activity.InviteActivity"/>
         <activity android:name=".activity.UserMsgActivity"/>
+        <activity android:name=".activity.MyQuesAnswerListActivity"/>
         <activity
             android:name=".activity.SplashActivity"
             android:theme="@style/SplashActivityStyle">
