@@ -8,6 +8,7 @@
 
     <com.tencent.qchat.widget.XWebView
         android:id="@+id/webview"
+        android:longClickable="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>
