@@ -126,7 +126,7 @@ public class MyQuesAnswerListActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(MQAHolder holder, final int position) {
-            Row row = mQAList.get(position - 1);
+            Row row = mQAList.get(position);
             MQAHolder msgHolder = holder;
             switch (mType){
                 case TYPE_QUES:
