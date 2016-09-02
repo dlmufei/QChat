@@ -1,6 +1,7 @@
 package com.tencent.qchat.activity;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -139,9 +140,10 @@ public class LoginActivity extends BaseActivity implements IUiListener {
                     @Override
                     public void onNext(JsonObject jsonObject) {
                         UserUtil.setToken(superCtx, jsonObject.get("token").getAsString());
-                        UserUtil.setIsStaff(superCtx, jsonObject.get("is_staff").getAsBoolean());
+                        UserUtil.setIsStaff(superCtx, jsonObject.get("is_staff").getAsString().equals("1")?true:false);
                         UserUtil.setIsLogin(superCtx, true);
                         openMainActivity();
+
                     }
                 });
     }
