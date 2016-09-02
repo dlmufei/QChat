@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -148,7 +149,7 @@ public class InviteActivity extends BaseActivity {
         TextView closeDetail=ButterKnife.findById(view,R.id.tv_closeDetail);
         simpleDraweeView.setImageURI(Uri.parse(mStaffRows.get(positon).getAvatar()));
         staff_nick.setText(mStaffRows.get(positon).getNickname());
-        staff_title.setText(mStaffRows.get(positon).getTitle());
+        staff_title.setText(TextUtils.isEmpty(mStaffRows.get(positon).getTitle())?"":" · "+mStaffRows.get(positon).getTitle() );
         staff_skill.setText(mStaffRows.get(positon).getSkilled_field());
         staff_profile.setText(mStaffRows.get(positon).getProfile());
         closeDetail.setOnClickListener(new View.OnClickListener() {
@@ -183,7 +184,7 @@ public class InviteActivity extends BaseActivity {
             ViewHolder holder = ViewHolder.get(superCtx, convertView, R.layout.staff_list_item, position, parent);
             holder.setImageUrl(R.id.staff_avatar, Uri.parse(mStaffRows.get(position).getAvatar()));
             holder.setText(R.id.staff_nick, mStaffRows.get(position).getNickname());
-            holder.setText(R.id.staff_title, mStaffRows.get(position).getTitle());
+            holder.setText(R.id.staff_title, TextUtils.isEmpty(mStaffRows.get(position).getTitle())?"":" · "+mStaffRows.get(position).getTitle());
             holder.setText(R.id.staff_skill, mStaffRows.get(position).getSkilled_field());
             if (ids != null && ids.contains(mStaffRows.get(position).getId())) {
                 holder.setCheckBox(R.id.cb_staff, true);
