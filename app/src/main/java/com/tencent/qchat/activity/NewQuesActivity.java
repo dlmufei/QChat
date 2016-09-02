@@ -130,7 +130,7 @@ public class NewQuesActivity extends BaseActivity {
            Bundle bundle=data.getExtras().getBundle(InviteActivity.DATA);
            avatars=bundle.getStringArrayList(InviteActivity.AVATARS);
            ids=bundle.getIntegerArrayList(InviteActivity.IDS);
-           if (ids.size()>0){
+           if (ids!=null&& ids.size()>0){
                mSelectStaffText.setText("已选择"+ids.size()+"位回答者");
                mSelectStaffText.setTextColor(Color.rgb(50,87,153));
            }else {
