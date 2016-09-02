@@ -1,6 +1,8 @@
 package com.tencent.qchat.activity;
 
 
+import android.os.Debug;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -12,6 +14,7 @@ import com.tencent.qchat.http.RetrofitHelper;
 import com.tencent.qchat.model.StaffMsgData;
 import com.tencent.qchat.model.StaffMsgRow;
 import com.tencent.qchat.utils.BaseAdapter;
+import com.tencent.qchat.utils.QLog;
 import com.tencent.qchat.utils.TimeUtil;
 import com.tencent.qchat.utils.UserUtil;
 import com.tencent.qchat.utils.ViewHolder;
@@ -93,7 +96,7 @@ public class StaffMsgActivity extends BaseActivity {
 
             @Override
             public void onError(Throwable e) {
-
+                showToast("请检查网络连接");
             }
 
             @Override
