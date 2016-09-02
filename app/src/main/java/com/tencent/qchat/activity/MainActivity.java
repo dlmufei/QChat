@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -59,6 +60,9 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
     @BindView(R.id.top_hint)
     TopHintView mHintView;
 
+    @BindView(R.id.new_ques_btn)
+    ImageButton mQuesBtn;
+
     @OnClick(R.id.new_ques_btn)
     protected void to_new_ques() {
         openActivity(NewQuesActivity.class);
@@ -92,6 +96,10 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
      * 初始化Toolbar和主界面的内容
      */
     private void initContentView() {
+        if (!UserUtil.isLogin(superCtx)||UserUtil.getIsStaff(superCtx)){
+            mQuesBtn.setVisibility(View.INVISIBLE);
+        }
+
         mRefreshLayout.setOnRefreshListener(this);
         mAdapter = new MainAdapter();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
