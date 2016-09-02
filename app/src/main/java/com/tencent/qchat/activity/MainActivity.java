@@ -9,12 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.debug.hv.ViewServer;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.tencent.qchat.R;
 import com.tencent.qchat.http.RetrofitHelper;
@@ -59,6 +59,9 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
     @BindView(R.id.top_hint)
     TopHintView mHintView;
 
+    @BindView(R.id.new_ques_btn)
+    ImageButton mNewQuesBtn;
+
     @OnClick(R.id.new_ques_btn)
     protected void to_new_ques() {
         openActivity(NewQuesActivity.class);
@@ -81,7 +84,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
 
     @Override
     public void onDidLoadView() {
-        ViewServer.get(this).addWindow(this);
+//        ViewServer.get(this).addWindow(this);
         setFullScreen();
         initMenu();
         initContentView();
@@ -92,6 +95,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
      * 初始化Toolbar和主界面的内容
      */
     private void initContentView() {
+        mNewQuesBtn.setVisibility(UserUtil.isLogin(this) && !UserUtil.getIsStaff(this) ? View.VISIBLE : View.GONE);
         mRefreshLayout.setOnRefreshListener(this);
         mAdapter = new MainAdapter();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -135,11 +139,11 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
                 switch (position) {
                     case 0:
                         if (UserUtil.isLogin(superCtx)) {
-                            Intent intent=new Intent(superCtx,MyQuesAnswerListActivity.class);
+                            Intent intent = new Intent(superCtx, MyQuesAnswerListActivity.class);
                             if (UserUtil.getIsStaff(superCtx)) {
-                                intent.putExtra(MyQuesAnswerListActivity.TYPE,MyQuesAnswerListActivity.TYPE_ANSWER);
+                                intent.putExtra(MyQuesAnswerListActivity.TYPE, MyQuesAnswerListActivity.TYPE_ANSWER);
                             } else {
-                                intent.putExtra(MyQuesAnswerListActivity.TYPE,MyQuesAnswerListActivity.TYPE_QUES);
+                                intent.putExtra(MyQuesAnswerListActivity.TYPE, MyQuesAnswerListActivity.TYPE_QUES);
                             }
                             startActivity(intent);
                             playOpenAnimation();
@@ -366,13 +370,13 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ViewServer.get(this).removeWindow(this);
+//        ViewServer.get(this).removeWindow(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        ViewServer.get(this).setFocusedWindow(this);
+//        ViewServer.get(this).setFocusedWindow(this);
         // activity苏醒时需要根据当前登录状态更新menu列表的数据
         if (mMenuList.getAdapter() != null) {
             BaseAdapter adapter = (BaseAdapter) mMenuList.getAdapter();
