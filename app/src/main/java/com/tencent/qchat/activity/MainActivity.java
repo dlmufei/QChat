@@ -3,6 +3,7 @@ package com.tencent.qchat.activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -258,7 +259,15 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
                     mainHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            openWebActivity(mQRowList.get(position - 1).getQuestionUrl(), "问题详情");
+                            if (UserUtil.isLogin(superCtx)&&UserUtil.getIsStaff(superCtx)){
+                                Intent intent = new Intent(MainActivity.this, NewAnswerActivity.class);
+                                intent.putExtra(NewAnswerActivity.Q_ID,mQRowList.get(position - 1).getQuestionId());
+                                intent.putExtra(NewAnswerActivity.Q_TITLE,mQRowList.get(position - 1).getQuestionContent());
+                                startActivityForResult(intent,NewAnswerActivity.REQ_CODE);
+                            }else {
+                                openWebActivity(mQRowList.get(position - 1).getQuestionUrl(), "问题详情");
+                            }
+
                             playOpenAnimation();
                         }
                     });

@@ -24,6 +24,7 @@ import static com.tencent.qchat.constant.Config.Q_ADD;
 import static com.tencent.qchat.constant.Config.Q_LIST;
 import static com.tencent.qchat.constant.Config.MSG_LIST;
 import static com.tencent.qchat.constant.Config.STAFF_LIST;
+import static com.tencent.qchat.constant.Config.A_ADD;
 
 
 /**
@@ -67,6 +68,12 @@ public interface EndPointInterface {
     @POST(Q_ADD)
     Observable<HttpResult<JsonObject>> addQuestion(@Field("token") String token, @Field("content") String content,
                                                    @Field("staff_id[]") ArrayList<Integer> staffIds);
+
+    //对提问增加一条回答
+    @FormUrlEncoded
+    @POST(A_ADD)
+    Observable<HttpResult<JsonObject>> addAnswer(@Field("token") String token,  @Field("question_id") int question_id,
+                                                 @Field("answer_type") String answer_type , @Field("content") String content);
 
 
 }

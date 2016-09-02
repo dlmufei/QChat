@@ -115,6 +115,17 @@ public class RetrofitHelper {
                 .subscribe(subscriber);
     }
 
+    /**
+     * 对提问增加一个答案
+     */
+    public void addAnswer(String token,int questionId,String answer_type,String content,Subscriber<JsonObject> subscriber){
+        mEndPointInterface.addAnswer(token, questionId,answer_type,content)
+                .map(new HttpResultFilter<JsonObject>())
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
 
     /**
      * 获取回答者列表
