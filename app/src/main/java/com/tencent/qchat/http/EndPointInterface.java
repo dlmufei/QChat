@@ -38,12 +38,13 @@ public interface EndPointInterface {
 
     //回答者通知列表信息
     @GET(MSG_LIST)
-    Observable<HttpResult<StaffMsgData>> getStaffMsgList();
+    Observable<HttpResult<StaffMsgData>> getStaffMsgList(@Field("token") String token);
 
     //获取邀请回答者
     @GET(STAFF_LIST)
     Observable<HttpResult<StaffData>> getStaffList();
 
+    //普通用户通知列表信息
     @GET(MSG_USER)
     Observable<HttpResult<Data>> getUserMsgList(@Query("token") String token);
 

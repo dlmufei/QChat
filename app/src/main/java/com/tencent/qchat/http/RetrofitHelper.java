@@ -130,8 +130,8 @@ public class RetrofitHelper {
     /**
      * 获取回答者通知信息列表
      */
-    public void getStaffMsgList(Subscriber<StaffMsgData> subscriber){
-        mEndPointInterface.getStaffMsgList()
+    public void getStaffMsgList(String token,Subscriber<StaffMsgData> subscriber){
+        mEndPointInterface.getStaffMsgList(token)
                 .map(new HttpResultFilter<StaffMsgData>())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
