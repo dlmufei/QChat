@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.debug.hv.ViewServer;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -25,6 +26,7 @@ import com.tencent.qchat.http.RetrofitHelper;
 import com.tencent.qchat.model.Data;
 import com.tencent.qchat.model.Row;
 import com.tencent.qchat.utils.BaseAdapter;
+import com.tencent.qchat.utils.NetworkChecker;
 import com.tencent.qchat.utils.ScreenUtil;
 import com.tencent.qchat.utils.TimeUtil;
 import com.tencent.qchat.utils.UserUtil;
@@ -183,6 +185,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
     }
 
     protected void getgetMsgCountRepeat(){
+
         RetrofitHelper.getInstance().getMsgCount(UserUtil.getToken(superCtx),new Subscriber<JsonObject>() {
             @Override
             public void onCompleted() {
@@ -196,7 +199,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
 
             @Override
             public void onNext(JsonObject data) {
-                Log.i("data:",data.toString());
+                Log.i("data:",data.toString());//TODO
                 if (data.get("total").getAsInt()>0){
                     mRedDot.setVisibility(View.VISIBLE);
                 }else {
@@ -207,6 +210,14 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
     }
 
     protected void refreshListDataFromNet() {
+        boolean isConnected = NetworkChecker.IsNetworkAvailable(superCtx);
+        if (!isConnected){
+            mHintView.setHintText("网络连接已断开");
+            mHintView.setVisibility(View.VISIBLE);
+            mRefreshLayout.refreshDownComplete();
+            return;
+        }
+
         RetrofitHelper.getInstance().getQList(new Subscriber<Data>() {
             @Override
             public void onCompleted() {
@@ -216,7 +227,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
 
             @Override
             public void onError(Throwable e) {
-                mHintView.setHintText(e.getMessage());
+                mHintView.setHintText("请检查网络连接");
                 mRefreshLayout.refreshDownComplete();
             }
 

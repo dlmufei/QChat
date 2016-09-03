@@ -6,10 +6,13 @@ import com.tencent.qchat.model.Data;
 import com.tencent.qchat.model.StaffData;
 import com.tencent.qchat.model.StaffMsgData;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -31,6 +34,7 @@ public class RetrofitHelper {
     private EndPointInterface mEndPointInterface;
 
     protected RetrofitHelper() {
+
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(2, TimeUnit.SECONDS)
                 .readTimeout(2, TimeUnit.SECONDS)
