@@ -13,6 +13,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
@@ -144,6 +145,24 @@ public class RetrofitHelper {
                 .map(new HttpResultFilter<StaffMsgData>())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    /**
+     * 获取通知数量
+     */
+    public void getMsgCount(String token,Subscriber<JsonObject> subscriber){
+        mEndPointInterface.getMsgCount(token)
+                .map(new HttpResultFilter<JsonObject>())
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .repeatWhen(new Func1<Observable<? extends Void>, Observable<?>>() {
+                    @Override
+                    public Observable<?> call(Observable<? extends Void> observable) {
+
+                        return observable.delay(2, TimeUnit.SECONDS);
+                    }
+                })
                 .subscribe(subscriber);
     }
 

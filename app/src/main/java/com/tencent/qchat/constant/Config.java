@@ -31,7 +31,9 @@ public class Config {
 
     //消息通知的类型
     public static final String NOTI_NEW_Q="new_question";//有新的问题邀请你回答
-    public static final String NOTI_NEW_A="new_question";//你的问题有了新的答案
+    public static final String NOTI_NEW_A="new_answer";//你的问题有了新的答案
+
+    //通知轮询时间设定
 
 
 

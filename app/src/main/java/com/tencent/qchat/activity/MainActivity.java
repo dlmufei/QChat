@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.android.debug.hv.ViewServer;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.gson.JsonObject;
 import com.tencent.qchat.R;
 import com.tencent.qchat.http.RetrofitHelper;
 import com.tencent.qchat.model.Data;
@@ -93,6 +95,8 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
         refreshListDataFromNet();
     }
 
+
+
     /**
      * 初始化Toolbar和主界面的内容
      */
@@ -106,6 +110,11 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration(mAdapter.new MainDivider(ScreenUtil.dp2px(this, 10)));
         mRecyclerView.setAdapter(mAdapter);
+
+        if (UserUtil.isLogin(superCtx)){
+            getgetMsgCountRepeat();
+        }
+
     }
 
     /**
@@ -167,6 +176,25 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
                         break;
                 }
                 mSlideMenu.close();
+            }
+        });
+    }
+
+    protected void getgetMsgCountRepeat(){
+        RetrofitHelper.getInstance().getMsgCount(UserUtil.getToken(superCtx),new Subscriber<JsonObject>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(JsonObject data) {
+                Log.i("data:",data.toString());
             }
         });
     }

@@ -23,6 +23,7 @@ import static com.tencent.qchat.constant.Config.Q_LIST;
 import static com.tencent.qchat.constant.Config.MSG_LIST;
 import static com.tencent.qchat.constant.Config.STAFF_LIST;
 import static com.tencent.qchat.constant.Config.A_ADD;
+import static com.tencent.qchat.constant.Config.MSG_COUNT;
 
 
 /**
@@ -47,9 +48,15 @@ public interface EndPointInterface {
     @GET(MSG_USER)
     Observable<HttpResult<Data>> getUserMsgList(@Query("token") String token);
 
+    //提问列表
     @GET(MY_Q_LIST)
     Observable<HttpResult<Data>> getMyQuesList(@Query("token") String token);
 
+    //获取通知数量
+    @GET(MSG_COUNT)
+    Observable<HttpResult<JsonObject>> getMsgCount(@Query("token") String token);
+
+    //回答的问题列表
     @GET(MY_A_LIST)
     Observable<HttpResult<Data>> getMyAnswerList(@Query("token") String token);
 
