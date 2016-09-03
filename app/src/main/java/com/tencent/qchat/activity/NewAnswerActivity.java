@@ -16,6 +16,8 @@ import butterknife.OnTextChanged;
 import rx.Subscriber;
 
 /**
+ * 嘉宾对问题进行回答
+ *
  * Created by cliffyan on 2016/9/2.
  */
 public class NewAnswerActivity extends BaseActivity {
@@ -98,6 +100,7 @@ public class NewAnswerActivity extends BaseActivity {
     public void onDidLoadView() {
         mTitleView.setText("回答");
         mPostView.setText("发布");
+        mQuestionEdit.setHint("请输入想回答的答案");
         mAnswerTitleView.setText(question_title);
     }
 

@@ -25,8 +25,9 @@ public class Config {
     public static final String A_ADD="question/answer";//对提问增加一条回答
 
 
-    public static final String MSG_LIST = "notification/list";  // 通知列表
+    public static final String MSG_LIST = "notification/list"; // 获取嘉宾用户的通知列表 TODO
     public static final String MSG_USER="notification/list";//获取普通用户的通知列表
+    public static final String MSG_COUNT="notification/count";//获取通知数量
 
     //消息通知的类型
     public static final String NOTI_NEW_Q="new_question";//有新的问题邀请你回答

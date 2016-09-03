@@ -3,8 +3,6 @@ package com.tencent.qchat.http;
 import com.google.gson.JsonObject;
 import com.tencent.qchat.constant.Config;
 import com.tencent.qchat.model.Data;
-import com.tencent.qchat.model.MsgData;
-import com.tencent.qchat.model.QList;
 import com.tencent.qchat.model.StaffData;
 import com.tencent.qchat.model.StaffMsgData;
 
