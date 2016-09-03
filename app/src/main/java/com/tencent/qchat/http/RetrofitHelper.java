@@ -160,7 +160,7 @@ public class RetrofitHelper {
                     @Override
                     public Observable<?> call(Observable<? extends Void> observable) {
 
-                        return observable.delay(2, TimeUnit.SECONDS);
+                        return observable.delay(Config.MSG_PULL_INTEVAL, TimeUnit.SECONDS);
                     }
                 })
                 .subscribe(subscriber);

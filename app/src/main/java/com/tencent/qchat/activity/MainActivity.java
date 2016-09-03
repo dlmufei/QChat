@@ -65,6 +65,8 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
 
     @BindView(R.id.new_ques_btn)
     ImageButton mQuesBtn;
+    @BindView(R.id.reddot)
+    ImageView mRedDot;
 
     @OnClick(R.id.new_ques_btn)
     protected void to_new_ques() {
@@ -195,6 +197,11 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
             @Override
             public void onNext(JsonObject data) {
                 Log.i("data:",data.toString());
+                if (data.get("total").getAsInt()>0){
+                    mRedDot.setVisibility(View.VISIBLE);
+                }else {
+                    mRedDot.setVisibility(View.INVISIBLE);
+                }
             }
         });
     }
