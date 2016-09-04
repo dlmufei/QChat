@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -15,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.tencent.qchat.R;
+import com.tencent.qchat.constant.Config;
 import com.tencent.qchat.utils.LoadViewInterface;
 import com.tencent.qchat.utils.ScreenUtil;
 
@@ -31,9 +34,31 @@ public abstract class BaseActivity extends AppCompatActivity implements LoadView
     Context superCtx;
     ViewGroup mRootView;
 
+    Handler mHandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            Toast.makeText(superCtx, (String) msg.obj, Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    /**
+     * 自定义Toast
+     *
+     * @param msg   显示给用户的信息
+     * @param error 调试时打印的Exception
+     */
+    public void showToast(String msg, String error) {
+        if (TextUtils.isEmpty(msg)) return;
+        if(Config.DEBUG){
+            mHandler.obtainMessage(0,msg+":"+error).sendToTarget();
+        }else{
+            mHandler.obtainMessage(0,msg).sendToTarget();
+        }
+    }
+
     public void showToast(String msg) {
         if (TextUtils.isEmpty(msg)) return;
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        mHandler.obtainMessage(0,msg).sendToTarget();
     }
 
     @Override

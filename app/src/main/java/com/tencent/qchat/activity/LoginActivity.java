@@ -1,16 +1,12 @@
 package com.tencent.qchat.activity;
 
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
-
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.JsonObject;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
-import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.tencent.qchat.R;
 import com.tencent.qchat.constant.Config;
 import com.tencent.qchat.http.RetrofitHelper;

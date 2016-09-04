@@ -1,6 +1,7 @@
 package com.tencent.qchat.activity;
 
 
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -71,8 +72,14 @@ public class StaffMsgActivity extends BaseActivity {
         mStaffMsgList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                openWebActivity(mStaffMsgRows.get(position).getQuestion_url(), "问题详情");
-                playOpenAnimation();
+                if (UserUtil.isLogin(superCtx)&&UserUtil.getIsStaff(superCtx)){
+                    Intent intent = new Intent(StaffMsgActivity.this, NewAnswerActivity.class);
+                    intent.putExtra(NewAnswerActivity.Q_ID,mStaffMsgRows.get(position).getQuestion_id());
+                    intent.putExtra(NewAnswerActivity.Q_TITLE,mStaffMsgRows.get(position).getQuestion_content());
+                    startActivityForResult(intent,NewAnswerActivity.REQ_CODE);
+                    playOpenAnimation();
+                }
+
             }
         });
     }
@@ -93,7 +100,7 @@ public class StaffMsgActivity extends BaseActivity {
 
             @Override
             public void onError(Throwable e) {
-
+                showToast("请检查网络连接");
             }
 
             @Override

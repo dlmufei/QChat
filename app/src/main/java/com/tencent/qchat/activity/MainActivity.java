@@ -3,8 +3,10 @@ package com.tencent.qchat.activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +16,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.gson.JsonObject;
 import com.tencent.qchat.R;
 import com.tencent.qchat.http.RetrofitHelper;
 import com.tencent.qchat.model.Data;
 import com.tencent.qchat.model.Row;
 import com.tencent.qchat.utils.BaseAdapter;
+import com.tencent.qchat.utils.NetworkChecker;
 import com.tencent.qchat.utils.ScreenUtil;
 import com.tencent.qchat.utils.TimeUtil;
 import com.tencent.qchat.utils.UserUtil;
@@ -61,6 +66,8 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
 
     @BindView(R.id.new_ques_btn)
     ImageButton mNewQuesBtn;
+    @BindView(R.id.reddot)
+    ImageView mRedDot;
 
     @OnClick(R.id.new_ques_btn)
     protected void to_new_ques() {
@@ -91,6 +98,8 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
         refreshListDataFromNet();
     }
 
+
+
     /**
      * 初始化Toolbar和主界面的内容
      */
@@ -101,6 +110,11 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration(mAdapter.new MainDivider(ScreenUtil.dp2px(this, 10)));
         mRecyclerView.setAdapter(mAdapter);
+
+        if (UserUtil.isLogin(superCtx)){
+            getMsgCountRepeat();
+        }
+
     }
 
     /**
@@ -166,7 +180,40 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
         });
     }
 
+    protected void getMsgCountRepeat(){
+
+        RetrofitHelper.getInstance().getMsgCount(UserUtil.getToken(superCtx),new Subscriber<JsonObject>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(JsonObject data) {
+                Log.i("data:",data.toString());//TODO
+                if (data.get("total").getAsInt()>0){
+                    mRedDot.setVisibility(View.VISIBLE);
+                }else {
+                    mRedDot.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+    }
+
     protected void refreshListDataFromNet() {
+        boolean isConnected = NetworkChecker.IsNetworkAvailable(superCtx);
+        if (!isConnected){
+            mHintView.setHintText("网络连接已断开");
+            mHintView.setVisibility(View.VISIBLE);
+            mRefreshLayout.refreshDownComplete();
+            return;
+        }
+
         RetrofitHelper.getInstance().getQList(new Subscriber<Data>() {
             @Override
             public void onCompleted() {
@@ -176,7 +223,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
 
             @Override
             public void onError(Throwable e) {
-                mHintView.setHintText(e.getMessage());
+                mHintView.setHintText("请检查网络连接");
                 mRefreshLayout.refreshDownComplete();
             }
 

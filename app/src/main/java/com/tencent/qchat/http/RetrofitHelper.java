@@ -3,18 +3,20 @@ package com.tencent.qchat.http;
 import com.google.gson.JsonObject;
 import com.tencent.qchat.constant.Config;
 import com.tencent.qchat.model.Data;
-import com.tencent.qchat.model.MsgData;
-import com.tencent.qchat.model.QList;
 import com.tencent.qchat.model.StaffData;
 import com.tencent.qchat.model.StaffMsgData;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
@@ -32,6 +34,7 @@ public class RetrofitHelper {
     private EndPointInterface mEndPointInterface;
 
     protected RetrofitHelper() {
+
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(2, TimeUnit.SECONDS)
                 .readTimeout(2, TimeUnit.SECONDS)
@@ -115,6 +118,17 @@ public class RetrofitHelper {
                 .subscribe(subscriber);
     }
 
+    /**
+     * 对提问增加一个答案
+     */
+    public void addAnswer(String token,int questionId,String answer_type,String content,Subscriber<JsonObject> subscriber){
+        mEndPointInterface.addAnswer(token, questionId,answer_type,content)
+                .map(new HttpResultFilter<JsonObject>())
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
 
     /**
      * 获取回答者列表
@@ -135,6 +149,24 @@ public class RetrofitHelper {
                 .map(new HttpResultFilter<StaffMsgData>())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    /**
+     * 获取通知数量
+     */
+    public void getMsgCount(String token,Subscriber<JsonObject> subscriber){
+        mEndPointInterface.getMsgCount(token)
+                .map(new HttpResultFilter<JsonObject>())
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .repeatWhen(new Func1<Observable<? extends Void>, Observable<?>>() {
+                    @Override
+                    public Observable<?> call(Observable<? extends Void> observable) {
+
+                        return observable.delay(Config.MSG_PULL_INTEVAL, TimeUnit.SECONDS);
+                    }
+                })
                 .subscribe(subscriber);
     }
 

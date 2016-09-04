@@ -50,6 +50,12 @@
 -keep class com.google.gson.** { *;}
 
 
+#微信登录
+-keep class com.tencent.mm.sdk.** {
+   *;
+}
+
+
 # fresco
 # Keep our interfaces so they can be used by other ProGuard rules.
 # See http://sourceforge.net/p/proguard/bugs/466/

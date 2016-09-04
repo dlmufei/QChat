@@ -15,6 +15,7 @@ import com.tencent.qchat.R;
 import com.tencent.qchat.http.RetrofitHelper;
 import com.tencent.qchat.model.Data;
 import com.tencent.qchat.model.Row;
+import com.tencent.qchat.utils.QLog;
 import com.tencent.qchat.utils.ScreenUtil;
 import com.tencent.qchat.utils.TimeUtil;
 import com.tencent.qchat.utils.UserUtil;
@@ -102,7 +103,9 @@ public class MyQuesAnswerListActivity extends BaseActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        showToast("加载失败");
+                        e.printStackTrace(System.out);
+                        System.out.println("token:"+UserUtil.getToken(superCtx));
+                        showToast("加载失败",e.getMessage());
                     }
 
                     @Override
@@ -126,7 +129,7 @@ public class MyQuesAnswerListActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(MQAHolder holder, final int position) {
-            Row row = mQAList.get(position - 1);
+            Row row = mQAList.get(position);
             MQAHolder msgHolder = holder;
             switch (mType){
                 case TYPE_QUES:
@@ -140,14 +143,16 @@ public class MyQuesAnswerListActivity extends BaseActivity {
             msgHolder.aNick.setText(row.getAnswerLead().getUserNickname());
             msgHolder.aTitle.setText(" · " + row.getAnswerLead().getUserTitle());
             msgHolder.aTime.setText(TimeUtil.msecToString(row.getQuestionTime()));
-            msgHolder.aContent.setText(row.getAnswerLead().getAnswerContent().replaceAll("(\r\n)+", "\n"));
-            if (row.getAnswerCount() <= 1) {
-                msgHolder.qCountLayout.setVisibility(View.GONE);
-            } else {
-                msgHolder.qCountLayout.setVisibility(View.VISIBLE);
-                msgHolder.aCount.setText("还有" + (row.getAnswerCount() - 1) + "个回答");
+            if(row.getAnswerLead()!=null){
+                msgHolder.aContent.setText(row.getAnswerLead().getAnswerContent().replaceAll("(\r\n)+", "\n"));
+                if (row.getAnswerCount() <= 1) {
+                    msgHolder.qCountLayout.setVisibility(View.GONE);
+                } else {
+                    msgHolder.qCountLayout.setVisibility(View.VISIBLE);
+                    msgHolder.aCount.setText("还有" + (row.getAnswerCount() - 1) + "个回答");
+                }
+                msgHolder.aAvatar.setImageURI(Uri.parse(row.getAnswerLead().getUserAvatar()));
             }
-            msgHolder.aAvatar.setImageURI(Uri.parse(row.getAnswerLead().getUserAvatar()));
         }
 
         @Override

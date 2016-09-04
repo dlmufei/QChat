@@ -17,7 +17,5 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        mWxApi = WXAPIFactory.createWXAPI(getApplicationContext(), Config.WECHAT_APP_ID, true);
-        mWxApi.registerApp(Config.WECHAT_APP_ID);
     }
 }
