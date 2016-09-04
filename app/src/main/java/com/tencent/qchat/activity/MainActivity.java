@@ -116,7 +116,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
         mRecyclerView.setAdapter(mAdapter);
 
         if (UserUtil.isLogin(superCtx)){
-            getgetMsgCountRepeat();
+            getMsgCountRepeat();
         }
 
     }
@@ -184,7 +184,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
         });
     }
 
-    protected void getgetMsgCountRepeat(){
+    protected void getMsgCountRepeat(){
 
         RetrofitHelper.getInstance().getMsgCount(UserUtil.getToken(superCtx),new Subscriber<JsonObject>() {
             @Override
@@ -305,15 +305,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
                     mainHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (UserUtil.isLogin(superCtx)&&UserUtil.getIsStaff(superCtx)){
-                                Intent intent = new Intent(MainActivity.this, NewAnswerActivity.class);
-                                intent.putExtra(NewAnswerActivity.Q_ID,mQRowList.get(position - 1).getQuestionId());
-                                intent.putExtra(NewAnswerActivity.Q_TITLE,mQRowList.get(position - 1).getQuestionContent());
-                                startActivityForResult(intent,NewAnswerActivity.REQ_CODE);
-                            }else {
-                                openWebActivity(mQRowList.get(position - 1).getQuestionUrl(), "问题详情");
-                            }
-
+                            openWebActivity(mQRowList.get(position - 1).getQuestionUrl(), "问题详情");
                             playOpenAnimation();
                         }
                     });
