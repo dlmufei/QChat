@@ -125,7 +125,7 @@ public class StaffMsgActivity extends BaseActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder = ViewHolder.get(superCtx, convertView, R.layout.staff_msg_item, position, parent);
-            holder.setText(R.id.staff_msg_title, "\\u3000\\u3000\\u3000\\u3000"+mStaffMsgRows.get(position).getQuestion_content());
+            holder.setText(R.id.staff_msg_title, "\u3000\u3000\u3000"+mStaffMsgRows.get(position).getQuestion_content());
             holder.setText(R.id.staff_msg_time, TimeUtil.msecToString(mStaffMsgRows.get(position).getQuestion_time()));
             return holder.getConvertView();
         }
