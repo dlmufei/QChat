@@ -93,7 +93,7 @@ public class UserMsgActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(MsgHolder holder, final int position) {
-            Row row = mMsgList.get(position - 1);
+            Row row = mMsgList.get(position);
             MsgHolder msgHolder = holder;
             msgHolder.qContent.setText(row.getQuestionContent().replaceAll("(\r\n)+", "\n"));
             msgHolder.aNick.setText(row.getAnswerLead().getUserNickname());
