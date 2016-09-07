@@ -34,7 +34,7 @@ public interface EndPointInterface {
 
     //问题列表信息
     @GET(Q_LIST)
-    Observable<HttpResult<Data>> getQList();
+    Observable<HttpResult<Data>> getQList(@Query("offset") int offset,@Query("limit") int limit,@Query("with_banners") int with_banners);
 
     //回答者通知列表信息
     @GET(MSG_LIST)

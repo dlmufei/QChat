@@ -13,16 +13,22 @@ import android.widget.Toast;
 
 import com.tencent.qchat.utils.NetworkChecker;
 
-public class NetWorkListener extends BroadcastReceiver {
+public abstract class NetWorkListener extends BroadcastReceiver {
+
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
             boolean isConnected = NetworkChecker.IsNetworkAvailable(context);
             if (!isConnected){
-                Toast.makeText(context,"网络连接中断",Toast.LENGTH_SHORT).show();
+                onNetError();
+            }else {
+                onNetOk();
             }
         }
     }
+    public abstract void onNetError();
+    public abstract void onNetOk();
+
 
 }

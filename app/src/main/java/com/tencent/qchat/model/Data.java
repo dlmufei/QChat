@@ -8,6 +8,16 @@ public class Data {
 
     private Integer total;
     private List<Row> rows = new ArrayList<>();
+    private List<Banner> banners=new ArrayList();
+
+
+    public List<Banner> getBanners() {
+        return banners;
+    }
+
+    public void setBanners(List<Banner> banners) {
+        this.banners = banners;
+    }
 
     /**
      * @return The total

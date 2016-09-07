@@ -1,6 +1,8 @@
 package com.tencent.qchat.activity;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
@@ -28,14 +30,21 @@ public class SplashActivity extends BaseActivity {
     @Override
     public void onDidLoadView() {
         setFullScreen();
-        Fresco.initialize(getApplicationContext());
-        App.mWxApi = WXAPIFactory.createWXAPI(getApplicationContext(), Config.WECHAT_APP_ID, true);
-        App.mWxApi.registerApp(Config.WECHAT_APP_ID);
-        if (UserUtil.isLogin(this)) {
-            startActivity(new Intent(this, MainActivity.class));
-        } else {
-            startActivity(new Intent(this, WXEntryActivity.class));
-        }
-        finish();
+        mHandler.sendEmptyMessageDelayed(0,500);
     }
+
+    Handler mHandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            Fresco.initialize(getApplicationContext());
+            App.mWxApi = WXAPIFactory.createWXAPI(getApplicationContext(), Config.WECHAT_APP_ID, true);
+            App.mWxApi.registerApp(Config.WECHAT_APP_ID);
+            if (UserUtil.isLogin(superCtx)) {
+                startActivity(new Intent(superCtx, MainActivity.class));
+            } else {
+                startActivity(new Intent(superCtx, WXEntryActivity.class));
+            }
+            finish();
+        }
+    };
 }

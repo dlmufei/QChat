@@ -54,8 +54,13 @@ public class TopHintView extends RelativeLayout {
         ta.recycle();
     }
 
-    public void setHintText(String hint) {
-        mHintView.setText(hint);
+    /**
+     * 展示提示性文字(TIME_TO_SHOW之后自动消失)
+     * @param prompt
+     */
+    public void setPromptText(String prompt) {
+        mHintView.setText(prompt);
+        mHintView.setTextColor(Color.WHITE);
         show();
         mHandler.removeMessages(0);
         mHandler.sendEmptyMessageDelayed(0,TIME_TO_SHOW);
@@ -65,11 +70,9 @@ public class TopHintView extends RelativeLayout {
      * 把show和hide封装一下,可以在这里做一些动画
      */
     protected void show(){
-//        setTranslationY(0);
         setVisibility(VISIBLE);
     }
     protected void hide(){
-//        setTranslationY(-getHeight());
         setVisibility(GONE);
     }
 

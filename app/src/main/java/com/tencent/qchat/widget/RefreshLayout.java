@@ -23,17 +23,24 @@ public class RefreshLayout extends LinearLayout {
 
     protected Context mContext;
     protected OnRefreshListener mRefreshListener;
+    protected boolean mRefreshable = true;
 
     protected RecyclerView mRecyclerView;
     protected RelativeLayout mHeaderView;
     protected RelativeLayout mFooterView;
 
     protected TextView mHeaderTextView;
+    protected TextView mFooterTextView;
 
     protected static final String HEADER_IDLE = "下拉刷新";  //  空闲状态
     protected static final String HEADER_READY = "松开刷新"; //  刷新状态就绪
     protected static final String HEADER_REFRESHING = "正在刷新";    //  正在刷新
     protected static final String HEADER_REFRESHED = "刷新成功";    //  刷新完成
+
+    protected static final String FOOTER_IDLE = "上拉加载更多";  //  空闲状态
+    protected static final String FOOTER_READY = "松开加载更多"; //  上拉加载更多状态就绪
+    protected static final String FOOTER_REFRESHING = "正在加载更多";    //  正在加载
+    protected static final String FOOTER_REFRESHED = "加载更多成功";    //  加载完成
 
     protected int mListHeight = 0;
     protected double mRate = 0.4;
@@ -64,12 +71,14 @@ public class RefreshLayout extends LinearLayout {
         mFooterView = createFooterView();
         addView(mFooterView, 2, params);
         mHeaderTextView = (TextView) mHeaderView.findViewById(R.id.header_text);
+        mFooterTextView = (TextView) mFooterView.findViewById(R.id.footer_text);
     }
 
     protected float mLastX, mLastY;
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (!mRefreshable) return super.onInterceptTouchEvent(ev);
         float currX = ev.getX();
         float currY = ev.getY();
         switch (ev.getAction()) {
@@ -102,6 +111,7 @@ public class RefreshLayout extends LinearLayout {
             case MotionEvent.ACTION_MOVE:
                 scrollBy((int) (-(currY - mLastY) * mRate));
                 updateHeader();
+                updateFooter();
                 mLastX = currX;
                 mLastY = currY;
                 return true;
@@ -113,6 +123,13 @@ public class RefreshLayout extends LinearLayout {
 //                    mStartTime = System.currentTimeMillis();
                     if (mRefreshListener != null) {
                         mRefreshListener.onRefreshDown();
+                    }
+                } else if (getScrollY() - mListHeight > DISTANCE_BEGIN_REFRESH) {   //  到达了上拉加载的范围
+                    smoothScrollTo(mListHeight + DISTANCE_BEGIN_REFRESH);
+                    mFooterTextView.setText(FOOTER_REFRESHING);
+//                    mStartTime = System.currentTimeMillis();
+                    if (mRefreshListener != null) {
+                        mRefreshListener.onRefreshUp();
                     }
                 } else {  //  未达到刷新的范围,直接重置
                     smoothScrollTo(mListHeight);
@@ -128,6 +145,15 @@ public class RefreshLayout extends LinearLayout {
             mHeaderTextView.setText(HEADER_IDLE);
         } else if (scrollY >= DISTANCE_BEGIN_REFRESH) {
             mHeaderTextView.setText(HEADER_READY);
+        }
+    }
+
+    protected void updateFooter() {
+        int scrollY = getScrollY() - mListHeight;
+        if (scrollY < DISTANCE_BEGIN_REFRESH) {
+            mFooterTextView.setText(FOOTER_IDLE);
+        } else if (scrollY >= DISTANCE_BEGIN_REFRESH) {
+            mFooterTextView.setText(FOOTER_READY);
         }
     }
 
@@ -167,7 +193,7 @@ public class RefreshLayout extends LinearLayout {
     }
 
     protected RelativeLayout createFooterView() {
-        return (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.widget_refresh_layout_header, null);
+        return (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.widget_refresh_layout_footer, null);
     }
 
 //    protected long mStartTime;    //  记录开始刷新的时间,方式刷新过快影响体验,把刷新时间控制在500毫秒以外
@@ -187,6 +213,10 @@ public class RefreshLayout extends LinearLayout {
 //                if (mListHeight > 0) scrollTo(mListHeight);
 //            }
 //        }, end - mStartTime < mMinRefreshTime ? mMinRefreshTime - end + mStartTime : 0);
+    }
+
+    public void setRefreshable(boolean b) {
+        mRefreshable = b;
     }
 
     public void setOnRefreshListener(OnRefreshListener listener) {

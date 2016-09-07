@@ -1,6 +1,7 @@
 package com.tencent.qchat.activity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,8 +23,10 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.JsonObject;
 import com.tencent.qchat.R;
 import com.tencent.qchat.http.RetrofitHelper;
+import com.tencent.qchat.model.Banner;
 import com.tencent.qchat.model.Data;
 import com.tencent.qchat.model.Row;
+import com.tencent.qchat.receiver.NetWorkListener;
 import com.tencent.qchat.utils.BaseAdapter;
 import com.tencent.qchat.utils.NetworkChecker;
 import com.tencent.qchat.utils.ScreenUtil;
@@ -34,6 +37,7 @@ import com.tencent.qchat.widget.RefreshLayout;
 import com.tencent.qchat.widget.SlideMenu;
 import com.tencent.qchat.widget.TopHintView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -50,6 +54,9 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
     protected String[] mMenuTextComm = new String[]{"我的提问", "退出登录"};
     protected String[] mMenuTextStaff = new String[]{"我的回答", "退出登录"};
     protected String[] mMenuTextVisitor = new String[]{"立即登录"};
+
+    protected final int LIMIT = 5;//每次刷新获取的数据条数
+    protected int mOffset = 0;//已经上拉加载的次数
 
     @BindView(R.id.menu_list)
     ListView mMenuList;
@@ -76,7 +83,10 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
     }
 
     MainAdapter mAdapter;
-    List<Row> mQRowList;
+    List<Row> mQRowList = new ArrayList<>();
+    Banner mBannerData;
+
+    protected NetWorkListener mNetChangeReceiver;
 
 
     @Override
@@ -86,7 +96,19 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
 
     @Override
     public void onWillLoadView() {
+        mNetChangeReceiver=new NetWorkListener() {
+            @Override
+            public void onNetError() {
+                mRefreshLayout.setRefreshable(false);
+                mHintView.setPromptText("网络连接失败");
+            }
 
+            @Override
+            public void onNetOk() {
+                mRefreshLayout.setRefreshable(true);
+            }
+        };
+        registerReceiver(mNetChangeReceiver,new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
     }
 
     @Override
@@ -97,7 +119,6 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
         initContentView();
         refreshListDataFromNet();
     }
-
 
 
     /**
@@ -111,7 +132,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
         mRecyclerView.addItemDecoration(mAdapter.new MainDivider(ScreenUtil.dp2px(this, 10)));
         mRecyclerView.setAdapter(mAdapter);
 
-        if (UserUtil.isLogin(superCtx)){
+        if (UserUtil.isLogin(superCtx)) {
             getMsgCountRepeat();
         }
 
@@ -180,9 +201,9 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
         });
     }
 
-    protected void getMsgCountRepeat(){
+    protected void getMsgCountRepeat() {
 
-        RetrofitHelper.getInstance().getMsgCount(UserUtil.getToken(superCtx),new Subscriber<JsonObject>() {
+        RetrofitHelper.getInstance().getMsgCount(UserUtil.getToken(superCtx), new Subscriber<JsonObject>() {
             @Override
             public void onCompleted() {
 
@@ -195,10 +216,10 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
 
             @Override
             public void onNext(JsonObject data) {
-                Log.i("data:",data.toString());//TODO
-                if (data.get("total").getAsInt()>0){
+                Log.i("data:", data.toString());//TODO
+                if (data.get("total").getAsInt() > 0) {
                     mRedDot.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     mRedDot.setVisibility(View.INVISIBLE);
                 }
             }
@@ -207,29 +228,33 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
 
     protected void refreshListDataFromNet() {
         boolean isConnected = NetworkChecker.IsNetworkAvailable(superCtx);
-        if (!isConnected){
-            mHintView.setHintText("网络连接已断开");
+        if (!isConnected) {
+            mHintView.setPromptText("网络连接已断开");
             mHintView.setVisibility(View.VISIBLE);
             mRefreshLayout.refreshDownComplete();
             return;
         }
 
-        RetrofitHelper.getInstance().getQList(new Subscriber<Data>() {
+        RetrofitHelper.getInstance().getQList(mOffset + LIMIT, LIMIT, mOffset == 0 ? 1 : 0, new Subscriber<Data>() {
+
             @Override
             public void onCompleted() {
                 mRefreshLayout.refreshDownComplete();
-                mHintView.setHintText("获得" + mQRowList.size() + "条消息");
+                mHintView.setPromptText("获得" + mQRowList.size() + "条消息");
             }
 
             @Override
             public void onError(Throwable e) {
-                mHintView.setHintText("请检查网络连接");
+                mHintView.setPromptText("请检查网络连接");
                 mRefreshLayout.refreshDownComplete();
             }
 
             @Override
             public void onNext(Data data) {
-                mQRowList = data.getRows();
+                if (mOffset == 0) {
+                    mQRowList.clear();
+                }
+                mQRowList.addAll(data.getRows());
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -237,12 +262,14 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
 
     @Override
     public void onRefreshDown() {
+        mOffset = 0;
         refreshListDataFromNet();
     }
 
     @Override
     public void onRefreshUp() {
-
+        mOffset++;
+        refreshListDataFromNet();
     }
 
     public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -262,20 +289,21 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             switch (getItemViewType(position)) {
                 case TYPE_BANNER:
                     BannerHolder bannerHolder = (BannerHolder) holder;
-                    bannerHolder.bannerView.setImageURI(Uri.parse("https://interesting.geeyan.com//uploads//images//c5//c1//96d012057c1492f5215ed79e5f94.jpg"));
+                    bannerHolder.bannerView.setImageURI(mBannerData.getAvatar());
                     bannerHolder.bannerView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-//                            openWebActivity();
+                            openWebActivity(mBannerData.getUrl(), null);
                         }
                     });
                     break;
                 case TYPE_ITEM:
-                    Row row = mQRowList.get(position - 1);
+                    final int pos = mBannerData == null ? position : position - 1;
+                    Row row = mQRowList.get(pos);
                     MainHolder mainHolder = (MainHolder) holder;
                     mainHolder.qContent.setText(row.getQuestionContent().replaceAll("(\r\n)+", "\n"));
                     mainHolder.aNick.setText(row.getAnswerLead().getUserNickname());
@@ -301,7 +329,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
                     mainHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            openWebActivity(mQRowList.get(position - 1).getQuestionUrl(), "问题详情");
+                            openWebActivity(mQRowList.get(pos).getQuestionUrl(), "问题详情");
                             playOpenAnimation();
                         }
                     });
@@ -311,7 +339,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
 
         @Override
         public int getItemViewType(int position) {
-            if (position == 0) {
+            if (position == 0 && mBannerData != null) {
                 return TYPE_BANNER;
             } else {
                 return TYPE_ITEM;
@@ -323,7 +351,10 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
             if (mQRowList == null) {
                 return 0;
             }
-            return mQRowList.size() + 1;
+            if (mBannerData != null) {
+                return mQRowList.size() + 1;
+            }
+            return mQRowList.size();
         }
 
         public class MainHolder extends RecyclerView.ViewHolder {
@@ -376,7 +407,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 super.getItemOffsets(outRect, view, parent, state);
                 int pos = parent.getChildLayoutPosition(view);
-                if (pos == 0 || pos == mAdapter.getItemCount() - 1) {
+                if ((pos == 0 && mBannerData != null) || pos == mAdapter.getItemCount() - 1) {
                     outRect.bottom = 0;
                 } else {
                     outRect.bottom = mOffset;
@@ -417,6 +448,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(mNetChangeReceiver);
 //        ViewServer.get(this).removeWindow(this);
     }
 

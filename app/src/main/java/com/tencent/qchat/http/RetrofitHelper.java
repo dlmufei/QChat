@@ -67,8 +67,8 @@ public class RetrofitHelper {
     /**
      * 获取问题列表
      */
-    public void getQList(Subscriber<Data> subscriber) {
-        mEndPointInterface.getQList()
+    public void getQList(int offset,int limit,int with_banners,Subscriber<Data> subscriber) {
+        mEndPointInterface.getQList(offset,limit,with_banners)
                 .map(new HttpResultFilter<Data>())
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
