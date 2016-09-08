@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,7 +88,6 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
     Banner mBannerData;
 
     protected NetWorkListener mNetChangeReceiver;
-
 
     @Override
     public int initLayoutRes() {
@@ -309,7 +309,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
                     mainHolder.aNick.setText(row.getAnswerLead().getUserNickname());
                     mainHolder.aTitle.setText(" · " + row.getAnswerLead().getUserTitle());
                     mainHolder.aTime.setText(TimeUtil.msecToString(row.getQuestionTime()));
-                    mainHolder.aContent.setText(row.getAnswerLead().getAnswerContent().replaceAll("(\r\n)+", "\n"));
+                    mainHolder.aContent.setText("\u3000\u3000\u3000"+row.getAnswerLead().getAnswerContent().replaceAll("(\r\n)+", "\n"));
                     if (row.getAnswerCount() <= 1) {
                         mainHolder.qCountLayout.setVisibility(View.GONE);
                     } else {

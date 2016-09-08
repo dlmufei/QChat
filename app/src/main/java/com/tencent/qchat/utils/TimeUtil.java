@@ -1,5 +1,8 @@
 package com.tencent.qchat.utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by hiwang on 16/8/21.
  */
@@ -30,6 +33,16 @@ public class TimeUtil {
             result = sec / SEC_PER_MON + "月前";
         }
         return result;
+    }
+
+
+    /**
+     * 下拉刷新顶部时间字符获取
+     */
+    public static String currTimeStr(){
+        SimpleDateFormat format=new SimpleDateFormat("MM月dd日 hh时mm分");
+        Date date=new Date(System.currentTimeMillis());
+        return format.format(date);
     }
 
     /**

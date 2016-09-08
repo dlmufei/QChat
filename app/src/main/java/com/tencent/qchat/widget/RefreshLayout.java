@@ -8,12 +8,14 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.animation.LinearInterpolator;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tencent.qchat.R;
 import com.tencent.qchat.utils.ScreenUtil;
+import com.tencent.qchat.utils.TimeUtil;
 
 /**
  * Created by hiwang on 16/8/23.
@@ -26,11 +28,16 @@ public class RefreshLayout extends LinearLayout {
     protected boolean mRefreshable = true;
 
     protected RecyclerView mRecyclerView;
-    protected RelativeLayout mHeaderView;
+    protected LinearLayout mHeaderView;
     protected RelativeLayout mFooterView;
 
     protected TextView mHeaderTextView;
+    protected ImageView mHeaderArrowView;
+    protected TextView mLastTimeView;
+    protected String mLastTimeStr = null;
+
     protected TextView mFooterTextView;
+    protected ImageView mFooterArrowView;
 
     protected static final String HEADER_IDLE = "下拉刷新";  //  空闲状态
     protected static final String HEADER_READY = "松开刷新"; //  刷新状态就绪
@@ -71,7 +78,10 @@ public class RefreshLayout extends LinearLayout {
         mFooterView = createFooterView();
         addView(mFooterView, 2, params);
         mHeaderTextView = (TextView) mHeaderView.findViewById(R.id.header_text);
+        mHeaderArrowView = (ImageView) mHeaderView.findViewById(R.id.arrow);
+        mLastTimeView = (TextView) mHeaderView.findViewById(R.id.last_time);
         mFooterTextView = (TextView) mFooterView.findViewById(R.id.footer_text);
+        mFooterArrowView = (ImageView) mFooterView.findViewById(R.id.arrow);
     }
 
     protected float mLastX, mLastY;
@@ -120,13 +130,23 @@ public class RefreshLayout extends LinearLayout {
                 if (getScrollY() < mListHeight - DISTANCE_BEGIN_REFRESH) {    //  达到了下拉刷新的范围
                     smoothScrollTo(mListHeight - DISTANCE_BEGIN_REFRESH);
                     mHeaderTextView.setText(HEADER_REFRESHING);
+                    mHeaderArrowView.setImageResource(R.mipmap.refresh_layout_loading);
 //                    mStartTime = System.currentTimeMillis();
                     if (mRefreshListener != null) {
                         mRefreshListener.onRefreshDown();
                     }
+                    //设置上次刷新时间,并记录此次刷新时间
+                    if (mLastTimeStr == null) {
+                        mLastTimeView.setVisibility(GONE);
+                    } else {
+                        mLastTimeView.setText(mLastTimeStr);
+                        mLastTimeView.setVisibility(VISIBLE);
+                    }
+                    mLastTimeStr = "上次刷新  "+TimeUtil.currTimeStr();
                 } else if (getScrollY() - mListHeight > DISTANCE_BEGIN_REFRESH) {   //  到达了上拉加载的范围
                     smoothScrollTo(mListHeight + DISTANCE_BEGIN_REFRESH);
                     mFooterTextView.setText(FOOTER_REFRESHING);
+                    mFooterArrowView.setImageResource(R.mipmap.refresh_layout_loading);
 //                    mStartTime = System.currentTimeMillis();
                     if (mRefreshListener != null) {
                         mRefreshListener.onRefreshUp();
@@ -143,8 +163,12 @@ public class RefreshLayout extends LinearLayout {
         int scrollY = mListHeight - getScrollY();
         if (scrollY < DISTANCE_BEGIN_REFRESH) {
             mHeaderTextView.setText(HEADER_IDLE);
+            mHeaderArrowView.setImageResource(R.mipmap.refresh_layout_arrow);
+            mHeaderArrowView.setRotation(0);
         } else if (scrollY >= DISTANCE_BEGIN_REFRESH) {
             mHeaderTextView.setText(HEADER_READY);
+            mHeaderArrowView.setImageResource(R.mipmap.refresh_layout_arrow);
+            mHeaderArrowView.setRotation(180);
         }
     }
 
@@ -152,8 +176,12 @@ public class RefreshLayout extends LinearLayout {
         int scrollY = getScrollY() - mListHeight;
         if (scrollY < DISTANCE_BEGIN_REFRESH) {
             mFooterTextView.setText(FOOTER_IDLE);
+            mFooterArrowView.setImageResource(R.mipmap.refresh_layout_arrow);
+            mFooterArrowView.setRotation(180);
         } else if (scrollY >= DISTANCE_BEGIN_REFRESH) {
             mFooterTextView.setText(FOOTER_READY);
+            mFooterArrowView.setImageResource(R.mipmap.refresh_layout_arrow);
+            mFooterArrowView.setRotation(0);
         }
     }
 
@@ -188,8 +216,8 @@ public class RefreshLayout extends LinearLayout {
         }
     }
 
-    protected RelativeLayout createHeaderView() {
-        return (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.widget_refresh_layout_header, null);
+    protected LinearLayout createHeaderView() {
+        return (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.widget_refresh_layout_header, null);
     }
 
     protected RelativeLayout createFooterView() {

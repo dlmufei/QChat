@@ -14,8 +14,10 @@
             android:id="@+id/q_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:textSize="@dimen/system_main_text_normal"
-            android:textColor="#325799"
+            android:textColor="#285398"
             android:padding="20dp" />
 
         <ImageView
@@ -40,12 +42,12 @@
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/a_avatar"
             fresco:roundAsCircle="true"
-            android:layout_width="30dp"
-            android:layout_height="30dp" />
+            android:layout_width="36dp"
+            android:layout_height="36dp" />
 
         <TextView
             android:id="@+id/a_nick"
-            android:textColor="#515151"
+            android:textColor="#535353"
             android:textSize="@dimen/system_main_text_normal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -56,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/system_main_text_normal"
-            android:textColor="#b8b8b8"
+            android:textColor="#c8c8c8"
             />
 
         <View
@@ -66,22 +68,35 @@
 
         <TextView
             android:id="@+id/a_time"
-            android:textColor="#b8b8b8"
+            android:textColor="#cbcbcb"
             android:textSize="14dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/a_content"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#333"
-        android:maxLength="100"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="20dp"
-        />
+        >
+        <ImageView
+            android:layout_width="42dp"
+            android:layout_height="22dp"
+            android:layout_marginLeft="20dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/icon_hava_talk"/>
+        <TextView
+            android:id="@+id/a_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/system_main_text_normal"
+            android:textColor="#393939"
+            android:ellipsize="end"
+            android:maxLines="4"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="20dp"
+            />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/a_count_layout"
