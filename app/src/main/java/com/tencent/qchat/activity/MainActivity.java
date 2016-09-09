@@ -79,6 +79,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
 
     @OnClick(R.id.new_ques_btn)
     protected void to_new_ques() {
+        mRedDot.setVisibility(View.INVISIBLE);
         openActivity(NewQuesActivity.class);
         playOpenAnimation();
     }
