@@ -2,6 +2,8 @@ package com.tencent.qchat.activity;
 
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -72,6 +74,11 @@ public class StaffMsgActivity extends BaseActivity {
         mStaffMsgList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //改变item状态，表示item已读
+                TextView tv_staff_msg_title= (TextView)view.findViewById(R.id.staff_msg_title);
+                tv_staff_msg_title.setTextColor(Color.rgb(184,184,184));
+
+                //跳转到回答界面
                 if (UserUtil.isLogin(superCtx)&&UserUtil.getIsStaff(superCtx)){
                     Intent intent = new Intent(StaffMsgActivity.this, NewAnswerActivity.class);
                     intent.putExtra(NewAnswerActivity.Q_ID,mStaffMsgRows.get(position).getQuestion_id());
@@ -125,7 +132,12 @@ public class StaffMsgActivity extends BaseActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder = ViewHolder.get(superCtx, convertView, R.layout.staff_msg_item, position, parent);
-            holder.setText(R.id.staff_msg_title, "\u3000\u3000\u3000"+mStaffMsgRows.get(position).getQuestion_content());
+            if (mStaffMsgRows.get(position).getIs_fresh()){
+                holder.setTextAndColor(R.id.staff_msg_title, "\u3000\u3000\u3000"+mStaffMsgRows.get(position).getQuestion_content(),Color.rgb(50,87,153));
+            }else {
+                holder.setTextAndColor(R.id.staff_msg_title, "\u3000\u3000\u3000"+mStaffMsgRows.get(position).getQuestion_content(),Color.rgb(184,184,184));
+            }
+
             holder.setText(R.id.staff_msg_time, TimeUtil.msecToString(mStaffMsgRows.get(position).getQuestion_time()));
             return holder.getConvertView();
         }

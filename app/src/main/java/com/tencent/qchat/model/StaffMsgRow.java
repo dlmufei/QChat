@@ -6,6 +6,7 @@ package com.tencent.qchat.model;
  */
 public class StaffMsgRow {
     private String notification_type;
+    private Boolean is_fresh;
     private Integer question_id;
     private String question_content;
     private Boolean question_is_hot;
@@ -19,6 +20,14 @@ public class StaffMsgRow {
 
     public void setNotification_type(String notification_type) {
         this.notification_type = notification_type;
+    }
+
+    public Boolean getIs_fresh() {
+        return is_fresh;
+    }
+
+    public void setIs_fresh(Boolean is_fresh) {
+        this.is_fresh = is_fresh;
     }
 
     public Integer getQuestion_id() {
@@ -73,6 +82,7 @@ public class StaffMsgRow {
     public String toString() {
         return "StaffMsgRow{" +
                 "notification_type='" + notification_type + '\'' +
+                ", is_fresh=" + is_fresh +
                 ", question_id=" + question_id +
                 ", question_content='" + question_content + '\'' +
                 ", question_is_hot=" + question_is_hot +
