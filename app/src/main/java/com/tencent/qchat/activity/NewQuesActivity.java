@@ -138,16 +138,18 @@ public class NewQuesActivity extends BaseActivity {
                mSelectStaffText.setTextColor(Color.BLACK);
            }
 
-           ArrayList<HashMap<String, Object>> imagelist = new ArrayList<>();
-           for (String avatar :avatars){
-               HashMap<String, Object> map = new HashMap<>();
-               map.put("url",avatar);
-               imagelist.add(map);
+           if (avatars!=null){
+               ArrayList<HashMap<String, Object>> imagelist = new ArrayList<>();
+               for (String avatar :avatars){
+                   HashMap<String, Object> map = new HashMap<>();
+                   map.put("url",avatar);
+                   imagelist.add(map);
+               }
+               SimpleAdapter simpleAdapter = new SimpleAdapter(this, imagelist,
+                       R.layout.select_staff_grid_item, new String[] { "url"}, new int[] {
+                       R.id.selectedstaff_avatar});
+               mSelectStaffGrid.setAdapter(simpleAdapter);
            }
-           SimpleAdapter simpleAdapter = new SimpleAdapter(this, imagelist,
-                   R.layout.select_staff_grid_item, new String[] { "url"}, new int[] {
-                   R.id.selectedstaff_avatar});
-           mSelectStaffGrid.setAdapter(simpleAdapter);
 
        }
     }

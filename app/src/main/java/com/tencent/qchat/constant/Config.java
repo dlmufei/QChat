@@ -36,7 +36,7 @@ public class Config {
     public static final String NOTI_NEW_A="new_answer";//你的问题有了新的答案
 
     //通知轮询时间设定
-    public static final int MSG_PULL_INTEVAL=5;
+    public static final int MSG_PULL_INTEVAL=10;
 
 
 }
