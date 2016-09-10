@@ -217,7 +217,6 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
 
             @Override
             public void onNext(JsonObject data) {
-                Log.i("data:", data.toString());//TODO
                 if (data.get("total").getAsInt() > 0) {
                     mRedDot.setVisibility(View.VISIBLE);
                 } else {
