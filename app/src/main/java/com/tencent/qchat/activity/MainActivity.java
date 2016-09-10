@@ -4,10 +4,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.JsonObject;
@@ -97,7 +94,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
 
     @Override
     public void onWillLoadView() {
-        mNetChangeReceiver=new NetWorkListener() {
+        mNetChangeReceiver = new NetWorkListener() {
             @Override
             public void onNetError() {
                 mRefreshLayout.setRefreshable(false);
@@ -109,7 +106,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
                 mRefreshLayout.setRefreshable(true);
             }
         };
-        registerReceiver(mNetChangeReceiver,new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
+        registerReceiver(mNetChangeReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
     }
 
     @Override
@@ -307,15 +304,21 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
                     Row row = mQRowList.get(pos);
                     MainHolder mainHolder = (MainHolder) holder;
                     mainHolder.qContent.setText(row.getQuestionContent().replaceAll("(\r\n)+", "\n"));
-                    mainHolder.aNick.setText(row.getAnswerLead().getUserNickname());
-                    mainHolder.aTitle.setText(" · " + row.getAnswerLead().getUserTitle());
-                    mainHolder.aTime.setText(TimeUtil.msecToString(row.getQuestionTime()));
-                    mainHolder.aContent.setText("\u3000\u3000\u3000"+row.getAnswerLead().getAnswerContent().replaceAll("(\r\n)+", "\n"));
-                    if (row.getAnswerCount() <= 1) {
-                        mainHolder.qCountLayout.setVisibility(View.GONE);
-                    } else {
-                        mainHolder.qCountLayout.setVisibility(View.VISIBLE);
-                        mainHolder.aCount.setText("还有" + (row.getAnswerCount() - 1) + "个回答");
+                    // 这里防止没有回答的情况下报NullPointerException
+                    if(row.getAnswerLead()!=null&&row.getAnswerLead().getAnswerContent()!=null){
+                        mainHolder.aNick.setText(row.getAnswerLead().getUserNickname());
+                        mainHolder.aTitle.setText(" · " + row.getAnswerLead().getUserTitle());
+                        mainHolder.aTime.setText(TimeUtil.msecToString(row.getQuestionTime()));
+                        mainHolder.aContent.setText("\u3000\u3000\u3000" + row.getAnswerLead().getAnswerContent().replaceAll("(\r\n)+", "\n"));
+                        if (row.getAnswerCount() <= 1) {
+                            mainHolder.qCountLayout.setVisibility(View.GONE);
+                        } else {
+                            mainHolder.qCountLayout.setVisibility(View.VISIBLE);
+                            mainHolder.aCount.setText("还有" + (row.getAnswerCount() - 1) + "个回答");
+                        }
+                        mainHolder.aAnswerLayout.setVisibility(View.VISIBLE);
+                    }else{
+                        mainHolder.aAnswerLayout.setVisibility(View.GONE);
                     }
 
                     mainHolder.aAvatar.setImageURI(Uri.parse(row.getAnswerLead().getUserAvatar()));
@@ -378,6 +381,8 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
             SimpleDraweeView aAvatar;
             @BindView(R.id.a_count_layout)
             LinearLayout qCountLayout;
+            @BindView(R.id.answer_layout)
+            LinearLayout aAnswerLayout;
 
             public MainHolder(View itemView) {
                 super(itemView);
@@ -422,8 +427,8 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
         if (mSlideMenu.isOpened()) {
             mSlideMenu.close();
         } else {
-//            moveTaskToBack(false);
-            super.onBackPressed();
+            moveTaskToBack(true);
+//            super.onBackPressed();
         }
     }
 

@@ -33,8 +33,8 @@ public class RefreshLayout extends LinearLayout {
 
     protected TextView mHeaderTextView;
     protected ImageView mHeaderArrowView;
-    protected TextView mLastTimeView;
-    protected String mLastTimeStr = null;
+//    protected TextView mLastTimeView;
+//    protected String mLastTimeStr = null;
 
     protected TextView mFooterTextView;
     protected ImageView mFooterArrowView;
@@ -79,7 +79,7 @@ public class RefreshLayout extends LinearLayout {
         addView(mFooterView, 2, params);
         mHeaderTextView = (TextView) mHeaderView.findViewById(R.id.header_text);
         mHeaderArrowView = (ImageView) mHeaderView.findViewById(R.id.arrow);
-        mLastTimeView = (TextView) mHeaderView.findViewById(R.id.last_time);
+//        mLastTimeView = (TextView) mHeaderView.findViewById(R.id.last_time);
         mFooterTextView = (TextView) mFooterView.findViewById(R.id.footer_text);
         mFooterArrowView = (ImageView) mFooterView.findViewById(R.id.arrow);
     }
@@ -135,14 +135,14 @@ public class RefreshLayout extends LinearLayout {
                     if (mRefreshListener != null) {
                         mRefreshListener.onRefreshDown();
                     }
-                    //设置上次刷新时间,并记录此次刷新时间
-                    if (mLastTimeStr == null) {
-                        mLastTimeView.setVisibility(GONE);
-                    } else {
-                        mLastTimeView.setText(mLastTimeStr);
-                        mLastTimeView.setVisibility(VISIBLE);
-                    }
-                    mLastTimeStr = "上次刷新  "+TimeUtil.currTimeStr();
+//                    //设置上次刷新时间,并记录此次刷新时间
+//                    if (mLastTimeStr == null) {
+//                        mLastTimeView.setVisibility(GONE);
+//                    } else {
+//                        mLastTimeView.setText(mLastTimeStr);
+//                        mLastTimeView.setVisibility(VISIBLE);
+//                    }
+//                    mLastTimeStr = "上次刷新  "+TimeUtil.currTimeStr();
                 } else if (getScrollY() - mListHeight > DISTANCE_BEGIN_REFRESH) {   //  到达了上拉加载的范围
                     smoothScrollTo(mListHeight + DISTANCE_BEGIN_REFRESH);
                     mFooterTextView.setText(FOOTER_REFRESHING);

@@ -42,8 +42,8 @@ public class MyQuesAnswerListActivity extends BaseActivity {
     List<Row> mQAList;
     MQAAdapter mAdapter;
 
-    public static final String TYPE="qa_type";
-    public static final int TYPE_QUES=0x01,TYPE_ANSWER=0x02;
+    public static final String TYPE = "qa_type";
+    public static final int TYPE_QUES = 0x01, TYPE_ANSWER = 0x02;
     protected int mType;
 
     @Override
@@ -53,13 +53,13 @@ public class MyQuesAnswerListActivity extends BaseActivity {
 
     @Override
     public void onWillLoadView() {
-        mType=getIntent().getIntExtra(TYPE,0);
+        mType = getIntent().getIntExtra(TYPE, 0);
         refreshListDataFromNet();
     }
 
     @Override
     public void onDidLoadView() {
-        switch (mType){
+        switch (mType) {
             case TYPE_QUES:
                 mTitleView.setText("我的提问");
                 break;
@@ -74,7 +74,7 @@ public class MyQuesAnswerListActivity extends BaseActivity {
     }
 
     protected void refreshListDataFromNet() {
-        switch (mType){
+        switch (mType) {
             case TYPE_QUES:
                 RetrofitHelper.getInstance().getMyQuesList(UserUtil.getToken(this), new Subscriber<Data>() {
                     @Override
@@ -104,8 +104,8 @@ public class MyQuesAnswerListActivity extends BaseActivity {
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace(System.out);
-                        System.out.println("token:"+UserUtil.getToken(superCtx));
-                        showToast("加载失败",e.getMessage());
+                        System.out.println("token:" + UserUtil.getToken(superCtx));
+                        showToast("加载失败", e.getMessage());
                     }
 
                     @Override
@@ -131,7 +131,7 @@ public class MyQuesAnswerListActivity extends BaseActivity {
         public void onBindViewHolder(MQAHolder holder, final int position) {
             Row row = mQAList.get(position);
             MQAHolder msgHolder = holder;
-            switch (mType){
+            switch (mType) {
                 case TYPE_QUES:
                     msgHolder.mTypeView.setText("你的提问");
                     break;
@@ -143,7 +143,8 @@ public class MyQuesAnswerListActivity extends BaseActivity {
             msgHolder.aNick.setText(row.getAnswerLead().getUserNickname());
             msgHolder.aTitle.setText(" · " + row.getAnswerLead().getUserTitle());
             msgHolder.aTime.setText(TimeUtil.msecToString(row.getQuestionTime()));
-            if(row.getAnswerLead()!=null){
+            // 这里防止没有回答的情况下报NullPointerException
+            if (row.getAnswerLead() != null && row.getAnswerLead().getAnswerContent() != null) {
                 msgHolder.aContent.setText(row.getAnswerLead().getAnswerContent().replaceAll("(\r\n)+", "\n"));
                 if (row.getAnswerCount() <= 1) {
                     msgHolder.qCountLayout.setVisibility(View.GONE);
