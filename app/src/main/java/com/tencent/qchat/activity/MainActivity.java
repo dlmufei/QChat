@@ -123,7 +123,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
      * 初始化Toolbar和主界面的内容
      */
     private void initContentView() {
-        mNewQuesBtn.setVisibility(UserUtil.isLogin(this) && !UserUtil.getIsStaff(this) ? View.VISIBLE : View.GONE);
+
         mRefreshLayout.setOnRefreshListener(this);
         mAdapter = new MainAdapter();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -466,6 +466,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
             BaseAdapter adapter = (BaseAdapter) mMenuList.getAdapter();
             adapter.notifyDataSetChanged();
         }
+        //主界面重新显示时，要刷新当前是否显示提问按钮
         mNewQuesBtn.setVisibility(UserUtil.isLogin(this) && !UserUtil.getIsStaff(this) ? View.VISIBLE : View.GONE);
     }
 
