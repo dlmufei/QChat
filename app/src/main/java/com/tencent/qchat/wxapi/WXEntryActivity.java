@@ -71,7 +71,10 @@ public class WXEntryActivity extends BaseActivity implements IUiListener, IWXAPI
         mLoadingDialog = new PopupWindow(this);
         mLoadingDialog.setOutsideTouchable(false);
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_login_loading, null);
-        ((AnimationDrawable)((ImageView)view.findViewById(R.id.loading)).getDrawable()).start();
+        ImageView loadingView= (ImageView) view.findViewById(R.id.loading);
+        AnimationDrawable drawable= (AnimationDrawable) loadingView.getDrawable();
+        drawable.start();
+//        ((AnimationDrawable)((ImageView)view.findViewById(R.id.loading)).getDrawable()).start();
         mLoadingDialog.setContentView(view);
         mLoadingDialog.setWidth(ScreenUtil.getScreenWidth(this) / 3);
         mLoadingDialog.setHeight(ScreenUtil.getScreenWidth(this) / 3);
