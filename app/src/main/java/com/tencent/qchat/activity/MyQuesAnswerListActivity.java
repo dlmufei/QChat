@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -153,7 +154,16 @@ public class MyQuesAnswerListActivity extends BaseActivity {
                     msgHolder.aCount.setText("还有" + (row.getAnswerCount() - 1) + "个回答");
                 }
                 msgHolder.aAvatar.setImageURI(Uri.parse(row.getAnswerLead().getUserAvatar()));
+            }else{
+                msgHolder.aAnswerLayout.setVisibility(View.GONE);
             }
+            msgHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openWebActivity(mQAList.get(position).getQuestionUrl(), "问题详情");
+                    playOpenAnimation();
+                }
+            });
         }
 
         @Override
@@ -181,9 +191,12 @@ public class MyQuesAnswerListActivity extends BaseActivity {
             SimpleDraweeView aAvatar;
             @BindView(R.id.a_count_layout)
             LinearLayout qCountLayout;
+            @BindView(R.id.answer_layout)
+            LinearLayout aAnswerLayout;
 
             public MQAHolder(View itemView) {
                 super(itemView);
+                itemView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 ButterKnife.bind(itemView);
                 ButterKnife.bind(this, itemView);
             }
@@ -200,12 +213,7 @@ public class MyQuesAnswerListActivity extends BaseActivity {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 super.getItemOffsets(outRect, view, parent, state);
-                int pos = parent.getChildLayoutPosition(view);
-                if (pos == 0 || pos == mAdapter.getItemCount() - 1) {
-                    outRect.bottom = 0;
-                } else {
-                    outRect.bottom = mOffset;
-                }
+                outRect.bottom = mOffset;
             }
         }
     }

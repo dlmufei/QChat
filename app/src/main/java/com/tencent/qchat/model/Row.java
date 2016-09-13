@@ -10,6 +10,16 @@ public class Row {
     private String question_url;
     private Integer answer_count;
     private AnswerLead answer_lead;
+    private Boolean is_fresh;
+
+
+    public Boolean getIs_fresh() {
+        return is_fresh;
+    }
+
+    public void setIs_fresh(Boolean is_fresh) {
+        this.is_fresh = is_fresh;
+    }
 
     /**
      * @return The questionId

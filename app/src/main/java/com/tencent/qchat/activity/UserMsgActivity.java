@@ -1,5 +1,6 @@
 package com.tencent.qchat.activity;
 
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -94,27 +96,39 @@ public class UserMsgActivity extends BaseActivity {
         @Override
         public void onBindViewHolder(MsgHolder holder, final int position) {
             Row row = mMsgList.get(position);
-            MsgHolder msgHolder = holder;
+            final MsgHolder msgHolder = holder;
             msgHolder.qContent.setText(row.getQuestionContent().replaceAll("(\r\n)+", "\n"));
-            msgHolder.aNick.setText(row.getAnswerLead().getUserNickname());
-            msgHolder.aTitle.setText(" · " + row.getAnswerLead().getUserTitle());
-            msgHolder.aTime.setText(TimeUtil.msecToString(row.getQuestionTime()));
-            msgHolder.aContent.setText(row.getAnswerLead().getAnswerContent().replaceAll("(\r\n)+", "\n"));
-            if (row.getAnswerCount() <= 1) {
-                msgHolder.qCountLayout.setVisibility(View.GONE);
-            } else {
-                msgHolder.qCountLayout.setVisibility(View.VISIBLE);
-                msgHolder.aCount.setText("还有" + (row.getAnswerCount() - 1) + "个回答");
+            if (row.getIs_fresh()){
+                holder.qContent.setTextColor(Color.rgb(50,87,153));
+            }else {
+                holder.qContent.setTextColor(Color.rgb(184,184,184));
+            }
+            // 这里防止没有回答的情况下报NullPointerException
+            if(row.getAnswerLead()!=null&&row.getAnswerLead().getAnswerContent()!=null) {
+                msgHolder.aNick.setText(row.getAnswerLead().getUserNickname());
+                msgHolder.aTitle.setText(" · " + row.getAnswerLead().getUserTitle());
+                msgHolder.aTime.setText(TimeUtil.msecToString(row.getQuestionTime()));
+                msgHolder.aContent.setText(row.getAnswerLead().getAnswerContent().replaceAll("(\r\n)+", "\n"));
+                if (row.getAnswerCount() <= 1) {
+                    msgHolder.qCountLayout.setVisibility(View.GONE);
+                } else {
+                    msgHolder.qCountLayout.setVisibility(View.VISIBLE);
+                    msgHolder.aCount.setText("还有" + (row.getAnswerCount() - 1) + "个回答");
+                }
+                msgHolder.aAvatar.setImageURI(Uri.parse(row.getAnswerLead().getUserAvatar()));
+            }else {
+                msgHolder.aAnswerLayout.setVisibility(View.GONE);
             }
 
-            msgHolder.aAvatar.setImageURI(Uri.parse(row.getAnswerLead().getUserAvatar()));
-//            msgHolder.itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    openWebActivity(mMsgList.get(position - 1).getQuestionUrl(), "问题详情");
-//                    playOpenAnimation();
-//                }
-//            });
+            msgHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //改变item状态，表示item已读
+                    msgHolder.qContent.setTextColor(Color.rgb(184,184,184));
+                    openWebActivity(mMsgList.get(position).getQuestionUrl(), "问题详情");
+                    playOpenAnimation();
+                }
+            });
         }
 
         @Override
@@ -140,9 +154,12 @@ public class UserMsgActivity extends BaseActivity {
             SimpleDraweeView aAvatar;
             @BindView(R.id.a_count_layout)
             LinearLayout qCountLayout;
+            @BindView(R.id.answer_layout)
+            LinearLayout aAnswerLayout;
 
             public MsgHolder(View itemView) {
                 super(itemView);
+                itemView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 ButterKnife.bind(itemView);
                 ButterKnife.bind(this, itemView);
             }

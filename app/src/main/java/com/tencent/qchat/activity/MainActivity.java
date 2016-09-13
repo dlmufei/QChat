@@ -6,7 +6,6 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -467,6 +466,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
             BaseAdapter adapter = (BaseAdapter) mMenuList.getAdapter();
             adapter.notifyDataSetChanged();
         }
+        mNewQuesBtn.setVisibility(UserUtil.isLogin(this) && !UserUtil.getIsStaff(this) ? View.VISIBLE : View.GONE);
     }
 
 }
