@@ -44,7 +44,8 @@ public class SplashActivity extends BaseActivity {
             } else {
                 startActivity(new Intent(superCtx, WXEntryActivity.class));
             }
-            finish();
+            onBackPressed();
+            overridePendingTransition(R.anim.slide_clam,R.anim.slide_clam);
         }
     };
 }

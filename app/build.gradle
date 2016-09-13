@@ -18,6 +18,9 @@ android {
         versionCode 1
         versionName "1.0.0"
     }
+    aaptOptions {
+        cruncherEnabled = false
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -49,6 +52,6 @@ dependencies {
     //    compile 'com.github.romainguy:ViewServer:017c01cd512cac3ec054d9eee05fc48c5a9d2de'
     compile files('libs/mta-sdk-1.6.2.jar')
     compile files('libs/open_sdk_r5756.jar')
-    compile 'com.facebook.fresco:animated-gif:0.13.0'
+//    compile 'com.facebook.fresco:animated-gif:0.13.0'
     compile files('libs/libammsdk.jar')//微信登录
 }

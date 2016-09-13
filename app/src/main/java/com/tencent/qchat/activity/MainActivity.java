@@ -34,6 +34,7 @@ import com.tencent.qchat.utils.ViewHolder;
 import com.tencent.qchat.widget.RefreshLayout;
 import com.tencent.qchat.widget.SlideMenu;
 import com.tencent.qchat.widget.TopHintView;
+import com.tencent.qchat.wxapi.WXEntryActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -181,7 +182,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
                             startActivity(intent);
                             playOpenAnimation();
                         } else {
-                            openActivity(LoginActivity.class);
+                            openActivity(WXEntryActivity.class);
                             playOpenAnimation();
 
                         }
@@ -191,7 +192,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
                         mSlideMenu.close();
                         ((BaseAdapter) mMenuList.getAdapter()).notifyDataSetChanged();
                         showToast("退出成功");
-                        openActivity(LoginActivity.class);
+                        openActivity(WXEntryActivity.class);
                         break;
                 }
                 mSlideMenu.close();

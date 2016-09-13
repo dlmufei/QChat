@@ -1,10 +1,15 @@
 package com.tencent.qchat.wxapi;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
 
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.JsonObject;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.common.Constants;
@@ -20,6 +25,7 @@ import com.tencent.qchat.constant.Config;
 import com.tencent.qchat.http.RetrofitHelper;
 import com.tencent.qchat.utils.NetworkChecker;
 import com.tencent.qchat.utils.QLog;
+import com.tencent.qchat.utils.ScreenUtil;
 import com.tencent.qchat.utils.UserUtil;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
@@ -29,12 +35,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import butterknife.BindView;
 import rx.Subscriber;
 
 /**
@@ -44,8 +48,8 @@ public class WXEntryActivity extends BaseActivity implements IUiListener, IWXAPI
 
 
     protected Tencent mTencentClient;
-    @BindView(R.id.loading)
-    SimpleDraweeView mLoadingView;
+
+    protected PopupWindow mLoadingDialog;
 
     @Override
     public int initLayoutRes() {
@@ -54,13 +58,23 @@ public class WXEntryActivity extends BaseActivity implements IUiListener, IWXAPI
 
     @Override
     public void onWillLoadView() {
-
+        initLoadingDialog();
     }
 
     @Override
     public void onDidLoadView() {
         setFullScreen();
         mTencentClient = Tencent.createInstance(Config.QQ_APP_ID, getApplicationContext());
+    }
+
+    protected void initLoadingDialog() {
+        mLoadingDialog = new PopupWindow(this);
+        mLoadingDialog.setOutsideTouchable(false);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_login_loading, null);
+        ((AnimationDrawable)((ImageView)view.findViewById(R.id.loading)).getDrawable()).start();
+        mLoadingDialog.setContentView(view);
+        mLoadingDialog.setWidth(ScreenUtil.getScreenWidth(this) / 3);
+        mLoadingDialog.setHeight(ScreenUtil.getScreenWidth(this) / 3);
     }
 
     public void openMainActivity() {
@@ -74,10 +88,11 @@ public class WXEntryActivity extends BaseActivity implements IUiListener, IWXAPI
             showToast("请先安装微信");
             return;
         }
-        if(!NetworkChecker.IsNetworkAvailable(this)){
+        if (!NetworkChecker.IsNetworkAvailable(this)) {
             showToast("网络异常");
             return;
         }
+        mLoadingDialog.showAtLocation(getWindow().getDecorView(), Gravity.CENTER, 0, 0);
         SendAuth.Req req = new SendAuth.Req();
         req.scope = "snsapi_userinfo";
         req.state = "wechat_login";
@@ -86,11 +101,11 @@ public class WXEntryActivity extends BaseActivity implements IUiListener, IWXAPI
     }
 
     public void qqLogin(View v) {
-        if(!NetworkChecker.IsNetworkAvailable(this)){
+        if (!NetworkChecker.IsNetworkAvailable(this)) {
             showToast("网络异常");
             return;
         }
-        mLoadingView.setVisibility(View.VISIBLE);
+        mLoadingDialog.showAtLocation(getWindow().getDecorView(), Gravity.CENTER, 0, 0);
         UserUtil.setOpenType(this, "qq");
         mTencentClient.login(this, "all", this);
     }
@@ -101,7 +116,10 @@ public class WXEntryActivity extends BaseActivity implements IUiListener, IWXAPI
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Tencent.onActivityResultData(requestCode, resultCode, data, this);
+        if(requestCode==Constants.REQUEST_LOGIN){
+            Tencent.onActivityResultData(requestCode, resultCode, data, this);
+        }
+        super.onActivityResult(requestCode,resultCode,data);
     }
 
     @Override
@@ -149,13 +167,13 @@ public class WXEntryActivity extends BaseActivity implements IUiListener, IWXAPI
                     @Override
                     public void onCompleted() {
                         showToast("登录成功");
-                        mLoadingView.setVisibility(View.GONE);
+                        mLoadingDialog.dismiss();
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         showToast(e.getMessage());
-                        mLoadingView.setVisibility(View.GONE);
+                        mLoadingDialog.dismiss();
                     }
 
                     @Override
@@ -189,7 +207,16 @@ public class WXEntryActivity extends BaseActivity implements IUiListener, IWXAPI
     }
 
     @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if(mLoadingDialog.isShowing()){
+           return true;
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
     public void onBackPressed() {
+        mLoadingDialog.dismiss();//防止内存泄漏
         super.onBackPressed();
         overridePendingTransition(R.anim.slide_clam, R.anim.slide_out_bottom);
     }
@@ -219,7 +246,7 @@ public class WXEntryActivity extends BaseActivity implements IUiListener, IWXAPI
         if (baseResp.errCode != 0) {
             showToast("授权失败", baseResp.errStr);
         } else { // 登录成功,通过code获取access_token
-            getAccessTokenByCode(((SendAuth.Resp)baseResp).code);
+            getAccessTokenByCode(((SendAuth.Resp) baseResp).code);
         }
     }
 
@@ -230,46 +257,46 @@ public class WXEntryActivity extends BaseActivity implements IUiListener, IWXAPI
                 String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + Config.WECHAT_APP_ID + "&secret=" + Config.WECHAT_SECRET
                         + "&code=" + code + "&grant_type=authorization_code";
                 try {
-                    HttpURLConnection conn= (HttpURLConnection) new URL(url).openConnection();
+                    HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
                     conn.setUseCaches(false);
-                    BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    String result="",line;
-                    while ((line=br.readLine())!=null){
-                        result+=line;
+                    BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                    String result = "", line;
+                    while ((line = br.readLine()) != null) {
+                        result += line;
                     }
-                    QLog.d(WXEntryActivity.class,result);
-                    JSONObject jo=new JSONObject(result);
-                    UserUtil.setOpenId(WXEntryActivity.this,jo.getString("openid"));
-                    UserUtil.setToken(WXEntryActivity.this,jo.getString("access_token"));
-                    getUserInfoByIDToken(jo.getString("openid"),jo.getString("access_token"));
+                    QLog.d(WXEntryActivity.class, result);
+                    JSONObject jo = new JSONObject(result);
+                    UserUtil.setOpenId(WXEntryActivity.this, jo.getString("openid"));
+                    UserUtil.setToken(WXEntryActivity.this, jo.getString("access_token"));
+                    getUserInfoByIDToken(jo.getString("openid"), jo.getString("access_token"));
                 } catch (Exception e) {
                     e.printStackTrace();
-                    QLog.d(WXEntryActivity.class,"微信登录失败111");
-                    showToast("登录失败1",e.getMessage());
+                    QLog.d(WXEntryActivity.class, "微信登录失败111");
+                    showToast("登录失败1", e.getMessage());
                 }
             }
         }).start();
     }
 
     protected void getUserInfoByIDToken(String openid, String access_token) {
-        String url="https://api.weixin.qq.com/sns/userinfo?access_token="+access_token+"&openid="+openid;
+        String url = "https://api.weixin.qq.com/sns/userinfo?access_token=" + access_token + "&openid=" + openid;
         try {
-            HttpURLConnection conn= (HttpURLConnection) new URL(url).openConnection();
+            HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
             conn.setUseCaches(false);
-            BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String result="",line;
-            while ((line=br.readLine())!=null){
-                result+=line;
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String result = "", line;
+            while ((line = br.readLine()) != null) {
+                result += line;
             }
-            QLog.d(WXEntryActivity.class,result);
-            JSONObject jo=new JSONObject(result);
-            UserUtil.setNickName(WXEntryActivity.this,jo.getString("nickname"));
-            UserUtil.setAvator(WXEntryActivity.this,jo.getString("headimgurl"));
+            QLog.d(WXEntryActivity.class, result);
+            JSONObject jo = new JSONObject(result);
+            UserUtil.setNickName(WXEntryActivity.this, jo.getString("nickname"));
+            UserUtil.setAvator(WXEntryActivity.this, jo.getString("headimgurl"));
             loginToSelfServer();
         } catch (Exception e) {
             e.printStackTrace();
-            QLog.d(WXEntryActivity.class,"微信登录失败222");
-            showToast("登录失败2",e.getMessage());
+            QLog.d(WXEntryActivity.class, "微信登录失败222");
+            showToast("登录失败2", e.getMessage());
         }
     }
 }
