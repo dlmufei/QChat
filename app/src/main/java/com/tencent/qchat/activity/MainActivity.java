@@ -242,9 +242,9 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
             public void onCompleted() {
                 mOffset= mQRowList.size();
                 //TODO
-//                Log.i("mOffset-onCompleted",mOffset+"");
-//                Log.i("lastItemCount-onCompleted",lastItemCount+"");
-//                Log.i("mQRowList.size-onCompleted",mQRowList.size()+"");
+                Log.i("mOffset-onCompleted",mOffset+"");
+                Log.i("lastItemCount-onCompleted",lastItemCount+"");
+                Log.i("mQRowList.size-onCompleted",mQRowList.size()+"");
 
                 mRefreshLayout.refreshDownComplete();
                 if (mQRowList.size()>lastItemCount){
@@ -261,9 +261,9 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
             @Override
             public void onNext(Data data) {
                 //Log.i("list",data.toString());//TODO
-//                Log.i("mOffset-onNext",mOffset+"");
-//                Log.i("data.getRows-onNext",data.getRows().size()+"");
-//                Log.i("mQRowList.size-onNext",mQRowList.size()+"");
+                Log.i("mOffset-onNext",mOffset+"");
+                Log.i("data.getRows-onNext",data.getRows().size()+"");
+                Log.i("mQRowList.size-onNext",mQRowList.size()+"");
 
                 if (mOffset == 0) {
                     mQRowList.clear();
