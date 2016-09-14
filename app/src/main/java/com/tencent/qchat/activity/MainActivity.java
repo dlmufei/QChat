@@ -54,7 +54,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
     protected String[] mMenuTextStaff = new String[]{"我的回答", "退出登录"};
     protected String[] mMenuTextVisitor = new String[]{"立即登录"};
 
-    protected final int LIMIT = 20;//每次刷新获取的数据条数
+    protected final int LIMIT = 10;//每次刷新获取的数据条数
     protected int mOffset = 0;//已经上拉加载的次数
 
     @BindView(R.id.menu_list)
@@ -86,7 +86,8 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
     List<Row> mQRowList = new ArrayList<>();
     Banner mBannerData;
 
-    int lastItemCount=0;
+    int lastItemCount=0;//上一次下拉后拿到的item总数
+
 
     protected NetWorkListener mNetChangeReceiver;
 
@@ -239,6 +240,12 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
 
             @Override
             public void onCompleted() {
+                mOffset= mQRowList.size();
+                //TODO
+//                Log.i("mOffset-onCompleted",mOffset+"");
+//                Log.i("lastItemCount-onCompleted",lastItemCount+"");
+//                Log.i("mQRowList.size-onCompleted",mQRowList.size()+"");
+
                 mRefreshLayout.refreshDownComplete();
                 if (mQRowList.size()>lastItemCount){
                     mHintView.setPromptText("获得" + mQRowList.size() + "条消息");
@@ -254,11 +261,14 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
             @Override
             public void onNext(Data data) {
                 //Log.i("list",data.toString());//TODO
+//                Log.i("mOffset-onNext",mOffset+"");
+//                Log.i("data.getRows-onNext",data.getRows().size()+"");
+//                Log.i("mQRowList.size-onNext",mQRowList.size()+"");
 
                 if (mOffset == 0) {
                     mQRowList.clear();
                 }
-                lastItemCount=mQRowList.size();
+                lastItemCount=mQRowList.size();//记录上一次的数量
                 mQRowList.addAll(data.getRows());
                 if(data.getBanners()!=null&&data.getBanners().size()>0){
                     mBannerData=data.getBanners().get(0);
@@ -276,7 +286,14 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
 
     @Override
     public void onRefreshUp() {
-        mOffset+=LIMIT;
+//        if (newStartIndex==0){
+//            mOffset+=LIMIT;
+//        }else {
+//            mOffset=newStartIndex;
+//        }
+
+
+
         refreshListDataFromNet();
     }
 
