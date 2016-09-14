@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -252,6 +253,9 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
                     mQRowList.clear();
                 }
                 mQRowList.addAll(data.getRows());
+                if(data.getBanners()!=null&&data.getBanners().size()>0){
+                    mBannerData=data.getBanners().get(0);
+                }
                 mAdapter.notifyDataSetChanged();
             }
         });
@@ -307,7 +311,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
                     if(row.getAnswerLead()!=null&&row.getAnswerLead().getAnswerContent()!=null){
                         mainHolder.aNick.setText(row.getAnswerLead().getUserNickname());
                         mainHolder.aTitle.setText(" · " + row.getAnswerLead().getUserTitle());
-                        mainHolder.aTime.setText(TimeUtil.msecToString(row.getQuestionTime()));
+                        mainHolder.aTime.setText(TimeUtil.msecToString(System.currentTimeMillis()/1000-row.getQuestionTime()));
                         mainHolder.aContent.setText("\u3000\u3000\u3000" + row.getAnswerLead().getAnswerContent().replaceAll("(\r\n)+", "\n"));
                         if (row.getAnswerCount() <= 1) {
                             mainHolder.qCountLayout.setVisibility(View.GONE);

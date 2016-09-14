@@ -74,7 +74,6 @@ public class WXEntryActivity extends BaseActivity implements IUiListener, IWXAPI
         ImageView loadingView= (ImageView) view.findViewById(R.id.loading);
         AnimationDrawable drawable= (AnimationDrawable) loadingView.getDrawable();
         drawable.start();
-//        ((AnimationDrawable)((ImageView)view.findViewById(R.id.loading)).getDrawable()).start();
         mLoadingDialog.setContentView(view);
         mLoadingDialog.setWidth(ScreenUtil.getScreenWidth(this) / 3);
         mLoadingDialog.setHeight(ScreenUtil.getScreenWidth(this) / 3);
@@ -137,7 +136,8 @@ public class WXEntryActivity extends BaseActivity implements IUiListener, IWXAPI
             UserUtil.setOpenId(this, openId);
             fetchUserInfo();
         } catch (JSONException e) {
-            e.printStackTrace();
+            showToast("登录失败,请重试",e.getMessage());
+            mLoadingDialog.dismiss();
         }
     }
 
@@ -152,12 +152,14 @@ public class WXEntryActivity extends BaseActivity implements IUiListener, IWXAPI
 
             @Override
             public void onError(UiError uiError) {
-
+                showToast("登录失败,请重试",uiError.errorMessage);
+                mLoadingDialog.dismiss();
             }
 
             @Override
             public void onCancel() {
-
+                showToast("登录取消");
+                mLoadingDialog.dismiss();
             }
         });
     }
@@ -175,7 +177,7 @@ public class WXEntryActivity extends BaseActivity implements IUiListener, IWXAPI
 
                     @Override
                     public void onError(Throwable e) {
-                        showToast(e.getMessage());
+                        showToast("登录失败,请重试",e.getMessage());
                         mLoadingDialog.dismiss();
                     }
 
@@ -206,7 +208,8 @@ public class WXEntryActivity extends BaseActivity implements IUiListener, IWXAPI
 
     @Override
     public void onCancel() {
-
+        showToast("登录取消");
+        mLoadingDialog.dismiss();
     }
 
     @Override

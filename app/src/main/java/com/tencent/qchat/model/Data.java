@@ -8,15 +8,15 @@ public class Data {
 
     private Integer total;
     private List<Row> rows = new ArrayList<>();
-    private List<Banner> banners=new ArrayList();
+    private List<Banner> banner_list=new ArrayList();
 
 
     public List<Banner> getBanners() {
-        return banners;
+        return banner_list;
     }
 
     public void setBanners(List<Banner> banners) {
-        this.banners = banners;
+        this.banner_list = banners;
     }
 
     /**

@@ -18,7 +18,7 @@ import com.tencent.qchat.utils.ScreenUtil;
 
 /**
  * Created by hiwang on 16/8/17.
- * <p>
+ * <p/>
  * 侧滑菜单
  */
 
@@ -129,7 +129,7 @@ public class SlideMenu extends RelativeLayout {
 
     float mLastX = 0, mLastY = 0; //用来记录上一次的触屏位置
     float mOriginX = 0, mOriginY = 0;  //为了判断是点击事件还是滑动事件
-    float mRatio = 4;   //  当 x>mRatio*y 的时候才认为用户想滑动菜单
+    float mRatio = 10;   //  当 x>mRatio*y 的时候才认为用户想滑动菜单
 
 
     @Override
@@ -140,9 +140,16 @@ public class SlideMenu extends RelativeLayout {
                 mOriginY = mLastY = ev.getY();      //  记录Down的位置
                 break;
             case MotionEvent.ACTION_MOVE:
+                if (Math.abs(ev.getX() - mLastX) > Math.abs(ev.getY() - mLastY) * mRatio) {  //  为了解决滑动冲突,首先在这里判断是否符合滑动菜单的要求,然后决定是否拦截该事件
+                    return true;
+                }
                 if (mIsOpened && ev.getX() > mMenuWidth) {  // 当菜单处于打开状态时,如果用户点击菜单以外的区域就进行拦截,进而在onTouchEvent中执行关闭菜单的效果
                     return true;
-                } else if (Math.abs(ev.getX() - mLastX) > Math.abs(ev.getY() - mLastY) * mRatio) {  //  为了解决滑动冲突,首先在这里判断是否符合滑动菜单的要求,然后决定是否拦截该事件
+                }
+                break;
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_UP:
+                if (mIsOpened && ev.getX() > mMenuWidth) {  // 当菜单处于打开状态时,如果用户点击菜单以外的区域就进行拦截,进而在onTouchEvent中执行关闭菜单的效果
                     return true;
                 }
                 break;
@@ -184,7 +191,7 @@ public class SlideMenu extends RelativeLayout {
                     } else if (scroll < mMenuWidth / 2.5 && scroll != 0) {  // 菜单划出距离小于mMenuWidth的2/5时,并且当前菜单没有打开时,自动打开菜单
                         smoothScrollTo(0);
                         mIsOpened = true;
-                    } else if (mIsOpened && ev.getX() > mMenuWidth && (Math.pow(mOriginX - ev.getX(), 2) + Math.pow(mOriginY - ev.getY(), 2)) < 2) {
+                    } else if (mIsOpened && ev.getX() > mMenuWidth) {
                         //  菜单处于打开状态时,如果发生菜单外区域的点击事件,就关闭菜单,这个是仿照手机qq的效果
                         close();
                         return true;
@@ -209,6 +216,10 @@ public class SlideMenu extends RelativeLayout {
     }
 
     public void smoothScrollBy(int pos) {
+        if (mAnimator.isRunning()) {
+            mAnimator.cancel();
+            mAnimator.removeAllUpdateListeners();
+        }
         int src = getScrollX();
         final int dest = src + pos;
         if (dest < 0 || dest > mMenuWidth) return;

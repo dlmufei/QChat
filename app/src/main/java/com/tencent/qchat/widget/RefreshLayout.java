@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.ViewConfiguration;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -97,9 +98,9 @@ public class RefreshLayout extends LinearLayout {
                 mLastY = currY;
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (currY > mLastY && canDown()) {
+                if (currY > mLastY+ViewConfiguration.get(mContext).getScaledTouchSlop() && canDown()) {
                     return true;
-                } else if (currY < mLastY && canUp()) {
+                } else if (currY < mLastY+ViewConfiguration.get(mContext).getScaledTouchSlop() && canUp()) {
                     return true;
                 }
                 mLastX = currX;
