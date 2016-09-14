@@ -39,6 +39,8 @@ public class UserMsgActivity extends BaseActivity {
     RecyclerView mRecyclerView;
     @BindView(R.id.title)
     TextView mTitleView;
+    @BindView(R.id.no_item_tip)
+    LinearLayout mNoItemTip;
 
 
     List<Row> mMsgList;
@@ -80,7 +82,17 @@ public class UserMsgActivity extends BaseActivity {
             @Override
             public void onNext(Data data) {
                 mMsgList = data.getRows();
-                mAdapter.notifyDataSetChanged();
+
+                if (mMsgList==null || mMsgList.size()==0){
+                    mNoItemTip.setVisibility(View.VISIBLE);
+                    mRecyclerView.setVisibility(View.GONE);
+                }else {
+                    mNoItemTip.setVisibility(View.GONE);
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                    mAdapter.notifyDataSetChanged();
+                }
+                onCreate(null);
+
             }
         });
     }

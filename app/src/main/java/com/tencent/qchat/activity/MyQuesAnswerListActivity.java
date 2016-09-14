@@ -40,6 +40,9 @@ public class MyQuesAnswerListActivity extends BaseActivity {
     @BindView(R.id.title)
     TextView mTitleView;
 
+    @BindView(R.id.no_item_tip)
+    LinearLayout mNoItemTip;
+
     List<Row> mQAList;
     MQAAdapter mAdapter;
 
@@ -80,18 +83,27 @@ public class MyQuesAnswerListActivity extends BaseActivity {
                 RetrofitHelper.getInstance().getMyQuesList(UserUtil.getToken(this), new Subscriber<Data>() {
                     @Override
                     public void onCompleted() {
-                        showToast("获取成功");
+
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        showToast("加载失败");
+
                     }
 
                     @Override
                     public void onNext(Data data) {
                         mQAList = data.getRows();
-                        mAdapter.notifyDataSetChanged();
+                        if (mQAList==null || mQAList.size()==0){
+                            mNoItemTip.setVisibility(View.VISIBLE);
+                            mRecyclerView.setVisibility(View.GONE);
+                        }else {
+                            mNoItemTip.setVisibility(View.GONE);
+                            mRecyclerView.setVisibility(View.VISIBLE);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                        onCreate(null);
+
                     }
                 });
                 break;
@@ -99,20 +111,28 @@ public class MyQuesAnswerListActivity extends BaseActivity {
                 RetrofitHelper.getInstance().getMyAnswerList(UserUtil.getToken(this), new Subscriber<Data>() {
                     @Override
                     public void onCompleted() {
-                        showToast("获取成功");
+
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace(System.out);
-                        System.out.println("token:" + UserUtil.getToken(superCtx));
-                        showToast("加载失败", e.getMessage());
                     }
 
                     @Override
                     public void onNext(Data data) {
                         mQAList = data.getRows();
-                        mAdapter.notifyDataSetChanged();
+                        if (mQAList==null || mQAList.size()<1){
+                            mNoItemTip.setVisibility(View.VISIBLE);
+                            mRecyclerView.setVisibility(View.GONE);
+                        }else {
+                            mNoItemTip.setVisibility(View.GONE);
+                            mRecyclerView.setVisibility(View.VISIBLE);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                        onCreate(null);
+
+
                     }
                 });
                 break;
