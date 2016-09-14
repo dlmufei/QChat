@@ -120,7 +120,7 @@ public class UserMsgActivity extends BaseActivity {
                 msgHolder.aNick.setText(row.getAnswerLead().getUserNickname());
                 msgHolder.aTitle.setText(" · " + row.getAnswerLead().getUserTitle());
                 msgHolder.aTime.setText(TimeUtil.msecToString(System.currentTimeMillis()-row.getQuestionTime()*1000));
-                msgHolder.aContent.setText(row.getAnswerLead().getAnswerContent().replaceAll("(\r\n)+", "\n"));
+                msgHolder.aContent.setText("\u3000\u3000\u3000"+row.getAnswerLead().getAnswerContent().replaceAll("(\r\n)+", "\n"));
                 if (row.getAnswerCount() <= 1) {
                     msgHolder.qCountLayout.setVisibility(View.GONE);
                 } else {

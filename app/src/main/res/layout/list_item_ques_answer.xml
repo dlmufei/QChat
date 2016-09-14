@@ -82,15 +82,31 @@
                 android:textSize="14dp" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/a_content"
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLength="100"
-            android:paddingBottom="20dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:textColor="#333" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="42dp"
+                android:layout_height="22dp"
+                android:layout_marginLeft="20dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/icon_hava_talk" />
+
+            <TextView
+                android:id="@+id/a_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="4"
+                android:paddingBottom="20dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:textColor="#494949"
+                android:textSize="@dimen/system_main_text_normal" />
+        </RelativeLayout>
+
 
         <LinearLayout
             android:id="@+id/a_count_layout"

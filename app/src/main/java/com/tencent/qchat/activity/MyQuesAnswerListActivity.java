@@ -16,7 +16,6 @@ import com.tencent.qchat.R;
 import com.tencent.qchat.http.RetrofitHelper;
 import com.tencent.qchat.model.Data;
 import com.tencent.qchat.model.Row;
-import com.tencent.qchat.utils.QLog;
 import com.tencent.qchat.utils.ScreenUtil;
 import com.tencent.qchat.utils.TimeUtil;
 import com.tencent.qchat.utils.UserUtil;
@@ -166,7 +165,7 @@ public class MyQuesAnswerListActivity extends BaseActivity {
             msgHolder.aTime.setText(TimeUtil.msecToString(System.currentTimeMillis()-row.getQuestionTime()*1000));
             // 这里防止没有回答的情况下报NullPointerException
             if (row.getAnswerLead() != null && row.getAnswerLead().getAnswerContent() != null) {
-                msgHolder.aContent.setText(row.getAnswerLead().getAnswerContent().replaceAll("(\r\n)+", "\n"));
+                msgHolder.aContent.setText("\u3000\u3000\u3000"+row.getAnswerLead().getAnswerContent().replaceAll("(\r\n)+", "\n"));
                 if (row.getAnswerCount() <= 1) {
                     msgHolder.qCountLayout.setVisibility(View.GONE);
                 } else {
