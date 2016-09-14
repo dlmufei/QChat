@@ -77,9 +77,10 @@ public class StaffMsgActivity extends BaseActivity {
                 //改变item状态，表示item已读
                 TextView tv_staff_msg_title= (TextView)view.findViewById(R.id.staff_msg_title);
                 tv_staff_msg_title.setTextColor(Color.rgb(184,184,184));
-
-                //跳转到回答界面
-                if (UserUtil.isLogin(superCtx)&&UserUtil.getIsStaff(superCtx)){
+                if ( !mStaffMsgRows.get(position).getIs_fresh()){
+                    openWebActivity(mStaffMsgRows.get(position).getQuestion_url(), "问题详情");
+                    playOpenAnimation();
+                }else if (UserUtil.isLogin(superCtx)&&UserUtil.getIsStaff(superCtx)){//跳转到回答界面
                     Intent intent = new Intent(StaffMsgActivity.this, NewAnswerActivity.class);
                     intent.putExtra(NewAnswerActivity.Q_ID,mStaffMsgRows.get(position).getQuestion_id());
                     intent.putExtra(NewAnswerActivity.Q_TITLE,mStaffMsgRows.get(position).getQuestion_content());
