@@ -10,7 +10,7 @@ public class StaffMsgRow {
     private Integer question_id;
     private String question_content;
     private Boolean question_is_hot;
-    private Integer question_time;
+    private Long question_time;
     private String question_url;
     private Integer answer_count;
 
@@ -54,11 +54,11 @@ public class StaffMsgRow {
         this.question_is_hot = question_is_hot;
     }
 
-    public Integer getQuestion_time() {
+    public Long getQuestion_time() {
         return question_time;
     }
 
-    public void setQuestion_time(Integer question_time) {
+    public void setQuestion_time(Long question_time) {
         this.question_time = question_time;
     }
 

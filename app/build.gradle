@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 android {
-//    signingConfigs {
-//        config {
-//            keyAlias 'youliao'
-//            keyPassword '123456'
-//            storeFile file('/Users/hiwang/Desktop/youliao.jks')
-//            storePassword '123456'
-//        }
-//    }
+    signingConfigs {
+        config {
+            keyAlias 'youliao'
+            keyPassword '123456'
+            storeFile file('D:/Android/AsWorkspace/dlmufei/releasekey/youliao.jks')
+            storePassword '123456'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
     defaultConfig {
@@ -23,6 +23,7 @@ android {
     }
     buildTypes {
         release {
+            signingConfig signingConfigs.config
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -37,7 +38,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.jakewharton:butterknife:8.2.1'
     apt 'com.jakewharton:butterknife-compiler:8.2.1'
@@ -52,6 +53,7 @@ dependencies {
     //    compile 'com.github.romainguy:ViewServer:017c01cd512cac3ec054d9eee05fc48c5a9d2de'
     compile files('libs/mta-sdk-1.6.2.jar')
     compile files('libs/open_sdk_r5756.jar')
-//    compile 'com.facebook.fresco:animated-gif:0.13.0'
-    compile files('libs/libammsdk.jar')//微信登录
+    //    compile 'com.facebook.fresco:animated-gif:0.13.0'
+    compile files('libs/libammsdk.jar')
+    //微信登录
 }

@@ -71,12 +71,12 @@ public class UserMsgActivity extends BaseActivity {
         RetrofitHelper.getInstance().getUserMsgList(UserUtil.getToken(this), new Subscriber<Data>() {
             @Override
             public void onCompleted() {
-                showToast("获取成功");
+
             }
 
             @Override
             public void onError(Throwable e) {
-                showToast("加载失败");
+
             }
 
             @Override
@@ -119,7 +119,7 @@ public class UserMsgActivity extends BaseActivity {
             if(row.getAnswerLead()!=null&&row.getAnswerLead().getAnswerContent()!=null) {
                 msgHolder.aNick.setText(row.getAnswerLead().getUserNickname());
                 msgHolder.aTitle.setText(" · " + row.getAnswerLead().getUserTitle());
-                msgHolder.aTime.setText(TimeUtil.msecToString(row.getQuestionTime()));
+                msgHolder.aTime.setText(TimeUtil.msecToString(System.currentTimeMillis()-row.getQuestionTime()*1000));
                 msgHolder.aContent.setText(row.getAnswerLead().getAnswerContent().replaceAll("(\r\n)+", "\n"));
                 if (row.getAnswerCount() <= 1) {
                     msgHolder.qCountLayout.setVisibility(View.GONE);

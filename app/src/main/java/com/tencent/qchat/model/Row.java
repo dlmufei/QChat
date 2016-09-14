@@ -6,7 +6,7 @@ public class Row {
     private Integer question_id;
     private String question_content;
     private Boolean question_is_hot;
-    private Integer question_time;
+    private Long question_time;
     private String question_url;
     private Integer answer_count;
     private AnswerLead answer_lead;
@@ -63,18 +63,12 @@ public class Row {
         this.question_is_hot = questionIsHot;
     }
 
-    /**
-     * @return The questionTime
-     */
-    public Integer getQuestionTime() {
+    public Long getQuestionTime() {
         return question_time;
     }
 
-    /**
-     * @param questionTime The question_time
-     */
-    public void setQuestionTime(Integer questionTime) {
-        this.question_time = questionTime;
+    public void setQuestionTime(Long question_time) {
+        this.question_time = question_time;
     }
 
     /**

@@ -52,6 +52,7 @@ public class Data {
         return "Data{" +
                 "total=" + total +
                 ", rows=" + rows +
+                ", banner_list=" + banner_list +
                 '}';
     }
 }

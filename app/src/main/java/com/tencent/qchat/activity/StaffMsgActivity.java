@@ -139,7 +139,7 @@ public class StaffMsgActivity extends BaseActivity {
                 holder.setTextAndColor(R.id.staff_msg_title, "\u3000\u3000\u3000"+mStaffMsgRows.get(position).getQuestion_content(),Color.rgb(184,184,184));
             }
 
-            holder.setText(R.id.staff_msg_time, TimeUtil.msecToString(mStaffMsgRows.get(position).getQuestion_time()));
+            holder.setText(R.id.staff_msg_time, TimeUtil.msecToString(System.currentTimeMillis()-mStaffMsgRows.get(position).getQuestion_time()*1000));
             return holder.getConvertView();
         }
     }

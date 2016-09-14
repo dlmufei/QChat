@@ -163,7 +163,7 @@ public class MyQuesAnswerListActivity extends BaseActivity {
             msgHolder.qContent.setText(row.getQuestionContent().replaceAll("(\r\n)+", "\n"));
             msgHolder.aNick.setText(row.getAnswerLead().getUserNickname());
             msgHolder.aTitle.setText(" · " + row.getAnswerLead().getUserTitle());
-            msgHolder.aTime.setText(TimeUtil.msecToString(row.getQuestionTime()));
+            msgHolder.aTime.setText(TimeUtil.msecToString(System.currentTimeMillis()-row.getQuestionTime()*1000));
             // 这里防止没有回答的情况下报NullPointerException
             if (row.getAnswerLead() != null && row.getAnswerLead().getAnswerContent() != null) {
                 msgHolder.aContent.setText(row.getAnswerLead().getAnswerContent().replaceAll("(\r\n)+", "\n"));

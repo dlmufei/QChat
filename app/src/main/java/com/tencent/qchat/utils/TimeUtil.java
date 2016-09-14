@@ -11,7 +11,7 @@ public class TimeUtil {
 
     private static final int SEC_PER_MIN = 60;
     private static final int SEC_PER_HOUR = SEC_PER_MIN * 60;
-    private static final int SEC_PER_DAY = SEC_PER_HOUR * 60;
+    private static final int SEC_PER_DAY = SEC_PER_HOUR * 24;
     private static final int SEC_PER_MON = SEC_PER_DAY * 30;
     private static final int SEC_PER_YEAR = SEC_PER_MON * 12;
 

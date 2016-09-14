@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -249,6 +250,8 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
 
             @Override
             public void onNext(Data data) {
+                Log.i("list",data.toString());
+
                 if (mOffset == 0) {
                     mQRowList.clear();
                 }
@@ -311,7 +314,7 @@ public class MainActivity extends BaseActivity implements RefreshLayout.OnRefres
                     if(row.getAnswerLead()!=null&&row.getAnswerLead().getAnswerContent()!=null){
                         mainHolder.aNick.setText(row.getAnswerLead().getUserNickname());
                         mainHolder.aTitle.setText(" · " + row.getAnswerLead().getUserTitle());
-                        mainHolder.aTime.setText(TimeUtil.msecToString(System.currentTimeMillis()/1000-row.getQuestionTime()));
+                        mainHolder.aTime.setText(TimeUtil.msecToString(System.currentTimeMillis()-row.getQuestionTime()*1000));
                         mainHolder.aContent.setText("\u3000\u3000\u3000" + row.getAnswerLead().getAnswerContent().replaceAll("(\r\n)+", "\n"));
                         if (row.getAnswerCount() <= 1) {
                             mainHolder.qCountLayout.setVisibility(View.GONE);
